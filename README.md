@@ -14,5 +14,9 @@ Contains information licensed under the
 Municipal Licensing & Standards, "Business Licences and Permits"). LicensedTO is not affiliated with or endorsed by
 the City of Toronto. See [terms.html](terms.html) for the terms of use and privacy note.
 
+The data updates itself every weekday at 10 pm Toronto time: a GitHub Actions job
+([.github/workflows/update-data.yml](.github/workflows/update-data.yml)) downloads the City's daily file through the
+open data API and applies what changed ([scripts/update-licensedto.py](scripts/update-licensedto.py)).
+
 Inspired by [NowServingTO](https://nowservingto.com/) by Joshua Opolko.
 

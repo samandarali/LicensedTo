@@ -1,0 +1,72 @@
+# Updates LicensedTO from the City of Toronto's open data every weekday at 10 pm Toronto time.
+# It downloads the City's daily "Business Licences and Permits" file through the open data API,
+# applies what changed (scripts/update-licensedto.py, no phone numbers), and commits the new data.
+# GitHub Pages then republishes https://samandarali.github.io/LicensedTo/ by itself.
+#
+# GitHub schedules run in UTC, and Toronto moves between UTC-4 (summer) and UTC-5 (winter), so there are
+# two schedules and the first step keeps only the one that is 10 pm in Toronto that day.
+# To run it by hand: Actions tab > "Update licence data" > Run workflow.
+name: Update licence data
+
+on:
+  schedule:
+    - cron: "0 2 * * 2-6"   # 02:00 UTC Tue-Sat = 10 pm Mon-Fri in summer (EDT)
+    - cron: "0 3 * * 2-6"   # 03:00 UTC Tue-Sat = 10 pm Mon-Fri in winter (EST)
+  workflow_dispatch:         # "Run workflow" button
+  push:                      # also runs once when this file or the script changes, as a test
+    branches: [main]
+    paths:
+      - ".github/workflows/update-data.yml"
+      - "scripts/update-licensedto.py"
+
+permissions:
+  contents: write            # to commit the updated data
+
+concurrency:
+  group: update-data
+  cancel-in-progress: false
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    steps:
+      - name: Keep only the 10 pm Toronto run
+        id: when
+        env:
+          EVENT: ${{ github.event_name }}
+          SCHEDULE: ${{ github.event.schedule }}
+        run: |
+          offset=$(TZ=America/Toronto date +%z)          # -0400 in summer, -0500 in winter
+          go=true
+          if [ "$EVENT" = "schedule" ]; then
+            if [ "$offset" = "-0400" ] && [ "$SCHEDULE" != "0 2 * * 2-6" ]; then go=false; fi
+            if [ "$offset" = "-0500" ] && [ "$SCHEDULE" != "0 3 * * 2-6" ]; then go=false; fi
+          fi
+          echo "Toronto offset $offset, event $EVENT, schedule '$SCHEDULE' -> run: $go"
+          echo "go=$go" >> "$GITHUB_OUTPUT"
+
+      - uses: actions/checkout@v4
+        if: steps.when.outputs.go == 'true'
+
+      - uses: actions/setup-python@v5
+        if: steps.when.outputs.go == 'true'
+        with:
+          python-version: "3.12"
+
+      - name: Download the City's data and update the directory
+        if: steps.when.outputs.go == 'true'
+        run: python -X utf8 scripts/update-licensedto.py
+
+      - name: Commit and push if anything changed
+        if: steps.when.outputs.go == 'true'
+        run: |
+          if git diff --quiet -- directory_data.js index.html; then
+            echo "No changes in the City's data since the last update."
+            exit 0
+          fi
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+          git add directory_data.js index.html
+          git commit -m "Data update $(TZ=America/Toronto date +%Y-%m-%d)"
+          git push
