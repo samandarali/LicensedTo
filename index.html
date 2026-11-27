@@ -1,0 +1,2780 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<title>Licensed TO</title>
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="claude:viewport-fit-sides" content="cover">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="stylesheet"
+  href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@600;700;800&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  /* Layout: header; hero with search and three stat cards; then a filter panel beside a results panel
+   that shows a paged list next to a map (map-only view on request; list-only below 1200px). */
+  :root {
+    --bg: #F7FCF5;
+    --surface: #ffffff;
+    --raised: #F5FAF7;
+    --ink: #16181b;
+    --ink-2: #3a3f45;
+    --muted: #6b7178;
+    --line: #e7e5e1;
+    --line-2: #d9d6d1;
+    --accent: #b0121b;
+    --accent-2: #8f0e16;
+    --accent-soft: #fbeaea;
+    --on-accent: #ffffff;
+    --ok: #217a4c;
+    --ok-soft: #e3f3ea;
+    --info: #2563b8;
+    --info-soft: #e6eef8;
+    --warn: #946200;
+    --warn-soft: #fbf1d9;
+    --bad: #b0121b;
+    --bad-soft: #fbeaea;
+    --g0: #c0262f;
+    --g1: #7b2d8e;
+    --g2: #2f7d4a;
+    --g3: #2563b8;
+    --g4: #b8860b;
+    --g5: #5b6470;
+    --shadow: 0 1px 2px rgba(20, 25, 30, .04), 0 4px 16px rgba(20, 25, 30, .05);
+    --f-display: "Inter Tight", "Inter", "Segoe UI", system-ui, sans-serif;
+    --f-body: "Inter", "Segoe UI", system-ui, sans-serif;
+    --f-mono: "JetBrains Mono", ui-monospace, Consolas, monospace;
+    --r: 12px;
+    --map-bg: #eef0ec;
+    --ward-line: #9aa19a;
+  }
+
+  /* dark mode: PraTech dark green (#0B3A2C) instead of near-black */
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --bg: #041D16;
+      --surface: #0F4433;
+      --raised: #134D3B;
+      --ink: #EEF3EF;
+      --ink-2: #CFDCD4;
+      --muted: #9DB5A8;
+      --line: #1C5645;
+      --line-2: #266351;
+      --accent: #e5484d;
+      --accent-2: #f0666a;
+      --accent-soft: #3b1a1c;
+      --on-accent: #ffffff;
+      --ok: #5fd197;
+      --ok-soft: #15301f;
+      --info: #6aa8f0;
+      --info-soft: #162536;
+      --warn: #f0c24f;
+      --warn-soft: #33290f;
+      --bad: #ff6b74;
+      --bad-soft: #3b1a1c;
+      --g0: #f07178;
+      --g1: #c792ea;
+      --g2: #6fcf97;
+      --g3: #6aa8f0;
+      --g4: #e8c15a;
+      --g5: #a7b0b8;
+      --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+      --map-bg: #08291F;
+      --ward-line: #6E8F80;
+      color-scheme: dark;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --bg: #041D16;
+    --surface: #0F4433;
+    --raised: #134D3B;
+    --ink: #EEF3EF;
+    --ink-2: #CFDCD4;
+    --muted: #9DB5A8;
+    --line: #1C5645;
+    --line-2: #266351;
+    --accent: #e5484d;
+    --accent-2: #f0666a;
+    --accent-soft: #3b1a1c;
+    --on-accent: #ffffff;
+    --ok: #5fd197;
+    --ok-soft: #15301f;
+    --info: #6aa8f0;
+    --info-soft: #162536;
+    --warn: #f0c24f;
+    --warn-soft: #33290f;
+    --bad: #ff6b74;
+    --bad-soft: #3b1a1c;
+    --g0: #f07178;
+    --g1: #c792ea;
+    --g2: #6fcf97;
+    --g3: #6aa8f0;
+    --g4: #e8c15a;
+    --g5: #a7b0b8;
+    --shadow: 0 1px 2px rgba(0, 0, 0, .3), 0 6px 18px rgba(0, 0, 0, .25);
+    --map-bg: #08291F;
+    --ward-line: #6E8F80;
+    color-scheme: dark;
+  }
+
+  * {
+    box-sizing: border-box;
+  }
+
+  /* PraTech brand pattern (puzzle-piece mark) behind the app: the same empty pieces as the PraTech site, soft cream outlines in light mode, soft gold outlines in dark (both 96px) */
+  :root {
+    --pattern: url("assets/pattern-c-cream-outline-soft.svg?v=1");
+    --pattern-size: 96px;
+  }
+
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --pattern: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M7.0 7.0 L15.14 7.00 C16.02 7.00 16.90 7.44 16.46 8.32 C15.58 9.64 16.24 11.84 18.00 11.84 C19.76 11.84 20.42 9.64 19.54 8.32 C19.10 7.44 19.98 7.00 20.86 7.00 L29.0 7.0 L29.00 15.14 C29.00 16.02 29.44 16.90 30.32 16.46 C31.64 15.58 33.84 16.24 33.84 18.00 C33.84 19.76 31.64 20.42 30.32 19.54 C29.44 19.10 29.00 19.98 29.00 20.86 L29.0 29.0 L20.86 29.00 C19.98 29.00 19.10 29.44 19.54 30.32 C20.42 31.64 19.76 33.84 18.00 33.84 C16.24 33.84 15.58 31.64 16.46 30.32 C16.90 29.44 16.02 29.00 15.14 29.00 L7.0 29.0 L7.00 20.86 C7.00 19.98 7.44 19.10 8.32 19.54 C9.64 20.42 11.84 19.76 11.84 18.00 C11.84 16.24 9.64 15.58 8.32 16.46 C7.44 16.90 7.00 16.02 7.00 15.14 L7.0 7.0 ZM47.0 47.0 L55.14 47.00 C56.02 47.00 56.90 47.44 56.46 48.32 C55.58 49.64 56.24 51.84 58.00 51.84 C59.76 51.84 60.42 49.64 59.54 48.32 C59.10 47.44 59.98 47.00 60.86 47.00 L69.0 47.0 L69.00 55.14 C69.00 56.02 69.44 56.90 70.32 56.46 C71.64 55.58 73.84 56.24 73.84 58.00 C73.84 59.76 71.64 60.42 70.32 59.54 C69.44 59.10 69.00 59.98 69.00 60.86 L69.0 69.0 L60.86 69.00 C59.98 69.00 59.10 69.44 59.54 70.32 C60.42 71.64 59.76 73.84 58.00 73.84 C56.24 73.84 55.58 71.64 56.46 70.32 C56.90 69.44 56.02 69.00 55.14 69.00 L47.0 69.0 L47.00 60.86 C47.00 59.98 47.44 59.10 48.32 59.54 C49.64 60.42 51.84 59.76 51.84 58.00 C51.84 56.24 49.64 55.58 48.32 56.46 C47.44 56.90 47.00 56.02 47.00 55.14 L47.0 47.0 Z%22 fill=%22none%22 stroke=%22%23D4AF5F%22 stroke-opacity=%22.11%22 stroke-width=%221.1%22/%3E%3C/svg%3E");
+      --pattern-size: 96px;
+    }
+  }
+
+  :root[data-theme="dark"] {
+    --pattern: url("data:image/svg+xml,%3Csvg xmlns=%22http://www.w3.org/2000/svg%22 width=%2280%22 height=%2280%22 viewBox=%220 0 80 80%22%3E%3Cpath d=%22M7.0 7.0 L15.14 7.00 C16.02 7.00 16.90 7.44 16.46 8.32 C15.58 9.64 16.24 11.84 18.00 11.84 C19.76 11.84 20.42 9.64 19.54 8.32 C19.10 7.44 19.98 7.00 20.86 7.00 L29.0 7.0 L29.00 15.14 C29.00 16.02 29.44 16.90 30.32 16.46 C31.64 15.58 33.84 16.24 33.84 18.00 C33.84 19.76 31.64 20.42 30.32 19.54 C29.44 19.10 29.00 19.98 29.00 20.86 L29.0 29.0 L20.86 29.00 C19.98 29.00 19.10 29.44 19.54 30.32 C20.42 31.64 19.76 33.84 18.00 33.84 C16.24 33.84 15.58 31.64 16.46 30.32 C16.90 29.44 16.02 29.00 15.14 29.00 L7.0 29.0 L7.00 20.86 C7.00 19.98 7.44 19.10 8.32 19.54 C9.64 20.42 11.84 19.76 11.84 18.00 C11.84 16.24 9.64 15.58 8.32 16.46 C7.44 16.90 7.00 16.02 7.00 15.14 L7.0 7.0 ZM47.0 47.0 L55.14 47.00 C56.02 47.00 56.90 47.44 56.46 48.32 C55.58 49.64 56.24 51.84 58.00 51.84 C59.76 51.84 60.42 49.64 59.54 48.32 C59.10 47.44 59.98 47.00 60.86 47.00 L69.0 47.0 L69.00 55.14 C69.00 56.02 69.44 56.90 70.32 56.46 C71.64 55.58 73.84 56.24 73.84 58.00 C73.84 59.76 71.64 60.42 70.32 59.54 C69.44 59.10 69.00 59.98 69.00 60.86 L69.0 69.0 L60.86 69.00 C59.98 69.00 59.10 69.44 59.54 70.32 C60.42 71.64 59.76 73.84 58.00 73.84 C56.24 73.84 55.58 71.64 56.46 70.32 C56.90 69.44 56.02 69.00 55.14 69.00 L47.0 69.0 L47.00 60.86 C47.00 59.98 47.44 59.10 48.32 59.54 C49.64 60.42 51.84 59.76 51.84 58.00 C51.84 56.24 49.64 55.58 48.32 56.46 C47.44 56.90 47.00 56.02 47.00 55.14 L47.0 47.0 Z%22 fill=%22none%22 stroke=%22%23D4AF5F%22 stroke-opacity=%22.11%22 stroke-width=%221.1%22/%3E%3C/svg%3E");
+    --pattern-size: 96px;
+  }
+
+  html {
+    background: var(--bg);
+  }
+
+  body {
+    margin: 0;
+    background: var(--pattern) center top / var(--pattern-size) var(--pattern-size) repeat, var(--bg);
+    color: var(--ink);
+    font: 15px/1.5 var(--f-body);
+    padding-left: max(16px, env(safe-area-inset-left, 0px));
+    padding-right: max(16px, env(safe-area-inset-right, 0px));
+  }
+
+  button,
+  input,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+
+  button {
+    cursor: pointer;
+  }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 2px;
+    border-radius: 6px;
+  }
+
+  svg.i {
+    width: 16px;
+    height: 16px;
+    flex: none;
+    stroke: currentColor;
+    fill: none;
+    stroke-width: 1.8;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+  }
+
+  .wrap {
+    max-width: 1500px;
+    margin: 0 auto;
+  }
+
+  mark {
+    background: color-mix(in srgb, var(--warn) 28%, transparent);
+    color: inherit;
+    border-radius: 3px;
+    padding: 0 1px;
+  }
+
+  [hidden] {
+    display: none !important;
+  }
+
+  /* header */
+  .topbar {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    padding-block: 18px 4px;
+  }
+
+  .brand {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    min-width: 0;
+  }
+
+  .logo {
+    font: 800 26px/1 var(--f-display);
+    letter-spacing: -.03em;
+    white-space: nowrap;
+  }
+
+  .logo b {
+    color: var(--accent);
+    font-weight: 800;
+  }
+
+  .asof {
+    font-size: 14px;
+    color: var(--ink-2);
+    padding-left: 18px;
+    border-left: 1px solid var(--line-2);
+    white-space: nowrap;
+  }
+
+  .byline {
+    font-size: 13px;
+    color: var(--muted);
+    white-space: nowrap;
+    text-decoration: none;
+  }
+
+  .byline b {
+    color: var(--ink-2);
+    font-weight: 600;
+  }
+
+  .byline:hover b {
+    color: var(--accent);
+  }
+
+  .loading {
+    padding: 32px 0;
+    color: var(--muted);
+    font-size: 15px;
+  }
+
+  .tops {
+    display: flex;
+    gap: 8px;
+  }
+
+  .ghost {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 9px 16px;
+    border-radius: 999px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 14.5px;
+    font-weight: 600;
+    box-shadow: var(--shadow);
+  }
+
+  .ghost:hover {
+    border-color: var(--muted);
+  }
+
+  .ghost[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .ghost svg.i {
+    width: 18px;
+    height: 18px;
+  }
+
+  .badge {
+    font: 600 11px/1 var(--f-mono);
+    background: var(--accent);
+    color: var(--on-accent);
+    border-radius: 999px;
+    padding: 3px 6px;
+  }
+
+  .ghost[aria-pressed="true"] .badge {
+    background: var(--on-accent);
+    color: var(--accent);
+  }
+
+  /* hero */
+  .hero {
+    padding-block: 28px 26px;
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 22px;
+  }
+
+  .hero h1 {
+    font: 800 clamp(34px, 5vw, 60px)/1.04 var(--f-display);
+    letter-spacing: -.035em;
+    margin: 0;
+    text-wrap: balance;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    margin: -8px 0 0;
+    color: var(--ink-2);
+    max-width: 64ch;
+    font-size: 17px;
+    line-height: 1.5;
+  }
+
+  .searchbox {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    max-width: 1300px;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: 12px;
+    padding: 6px 6px 6px 18px;
+    box-shadow: var(--shadow);
+  }
+
+  .searchbox:focus-within {
+    border-color: var(--ink-2);
+  }
+
+  .searchbox>svg.i {
+    width: 22px;
+    height: 22px;
+    color: var(--muted);
+  }
+
+  .searchbox input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    font-size: 17px;
+    padding: 10px 4px;
+  }
+
+  .searchbox input:focus {
+    outline: none;
+  }
+
+  .searchbox .clear {
+    border: 0;
+    background: var(--raised);
+    border-radius: 8px;
+    padding: 6px 10px;
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .btn-red {
+    border: 0;
+    background: var(--accent);
+    color: var(--on-accent);
+    font-weight: 600;
+    border-radius: 9px;
+  }
+
+  .btn-red:hover {
+    background: var(--accent-2);
+  }
+
+  .searchbox .btn-red {
+    padding: 11px 24px;
+    font-size: 16.5px;
+  }
+
+  .stats {
+    display: grid;
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 28px;
+    max-width: 1500px;
+  }
+
+  .stat {
+    display: flex;
+    align-items: center;
+    gap: 18px;
+    padding: 16px 22px;
+    border-radius: var(--r);
+    background: var(--surface);
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+    text-align: left;
+    min-width: 0;
+  }
+
+  button.stat:hover {
+    border-color: var(--line-2);
+  }
+
+  .stat[aria-pressed="true"] {
+    border-color: var(--accent);
+    box-shadow: inset 0 0 0 1px var(--accent);
+  }
+
+  .stat .ic {
+    width: 50px;
+    height: 50px;
+    border-radius: 10px;
+    background: var(--accent-soft);
+    color: var(--accent);
+    display: grid;
+    place-items: center;
+    flex: none;
+  }
+
+  .stat .ic svg.i {
+    width: 26px;
+    height: 26px;
+    stroke-width: 1.6;
+  }
+
+  .stat .tx {
+    flex: 1;
+    min-width: 0;
+    padding-left: 18px;
+    border-left: 1px solid var(--line);
+    display: flex;
+    flex-direction: column;
+  }
+
+  .stat .t {
+    font-weight: 600;
+    font-size: 16.5px;
+  }
+
+  .stat .s {
+    color: var(--ink-2);
+    font-size: 14.5px;
+  }
+
+  .stat .v {
+    font: 700 30px/1 var(--f-display);
+    font-variant-numeric: tabular-nums;
+    letter-spacing: -.01em;
+  }
+
+  /* layout */
+  .layout {
+    display: grid;
+    grid-template-columns: 326px minmax(0, 1fr);
+    gap: 16px;
+    align-items: start;
+    padding-bottom: 40px;
+  }
+
+  .layout.collapsed {
+    grid-template-columns: 64px minmax(0, 1fr);
+  }
+
+  .panel {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: var(--r);
+    box-shadow: var(--shadow);
+  }
+
+  aside.filters {
+    position: sticky;
+    top: 14px;
+    max-height: calc(100vh - 28px);
+    overflow-y: auto;
+    padding: 0 20px 18px;
+  }
+
+  .fhead {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 8px;
+    padding: 18px 0 14px;
+    border-bottom: 1px solid var(--line);
+    position: sticky;
+    top: 0;
+    background: var(--surface);
+    z-index: 2;
+  }
+
+  .fhead h3 {
+    margin: 0;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font: 700 21px var(--f-display);
+  }
+
+  .fhead h3 svg.i {
+    width: 22px;
+    height: 22px;
+  }
+
+  .linkbtn {
+    border: 0;
+    background: transparent;
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 14px;
+    color: var(--ink-2);
+    padding: 4px;
+  }
+
+  .linkbtn:hover {
+    color: var(--ink);
+  }
+
+  .closesheet {
+    display: none;
+  }
+
+  .layout.collapsed aside.filters {
+    padding: 0 8px;
+    overflow: hidden;
+  }
+
+  .layout.collapsed .fhead {
+    flex-direction: column;
+    border: 0;
+  }
+
+  .layout.collapsed .fhead h3 span,
+  .layout.collapsed .fbody,
+  .layout.collapsed #collapse span {
+    display: none;
+  }
+
+  .layout.collapsed #collapse svg {
+    transform: rotate(180deg);
+  }
+
+  details.fsec {
+    border-bottom: 1px solid var(--line);
+    padding: 4px 0;
+  }
+
+  details.fsec>summary {
+    list-style: none;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding: 12px 0;
+    font-weight: 600;
+    font-size: 16.5px;
+    cursor: pointer;
+  }
+
+  details.fsec>summary::-webkit-details-marker {
+    display: none;
+  }
+
+  details.fsec>summary svg.i {
+    width: 18px;
+    height: 18px;
+    transition: transform .15s;
+  }
+
+  details.fsec[open]>summary svg.i {
+    transform: rotate(180deg);
+  }
+
+  .fcontent {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 2px 0 14px;
+  }
+
+  .fcontent label.sub,
+  .fcontent .sub {
+    font-size: 12.5px;
+    color: var(--muted);
+    font-weight: 500;
+    margin-bottom: -4px;
+  }
+
+  .fcontent select {
+    width: 100%;
+    padding: 9px 10px;
+    border-radius: 9px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 14px;
+  }
+
+  .pc {
+    display: flex;
+    align-items: stretch;
+    border: 1px solid var(--line-2);
+    border-radius: 9px;
+    overflow: hidden;
+    background: var(--surface);
+  }
+
+  .pc svg.i {
+    margin: auto 0 auto 12px;
+    color: var(--ink-2);
+  }
+
+  .pc input {
+    flex: 1;
+    min-width: 0;
+    border: 0;
+    background: transparent;
+    padding: 10px 10px;
+    font-size: 14.5px;
+    text-transform: uppercase;
+  }
+
+  .pc input::placeholder {
+    text-transform: none;
+    color: var(--muted);
+  }
+
+  .pc input:focus {
+    outline: none;
+  }
+
+  .pc .btn-red {
+    border-radius: 0 8px 8px 0;
+    padding: 0 18px;
+    font-size: 14px;
+    margin: 3px;
+    border-radius: 7px;
+  }
+
+  .me {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 7px;
+    padding: 9px 12px;
+    border-radius: 9px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-weight: 600;
+    font-size: 14px;
+  }
+
+  .me:hover {
+    border-color: var(--ink-2);
+  }
+
+  .me:disabled {
+    opacity: .6;
+    cursor: progress;
+  }
+
+  .radius {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+  }
+
+  .radius button {
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    border-radius: 8px;
+    padding: 8px 4px;
+    font-size: 14px;
+  }
+
+  .radius button[aria-pressed="true"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+    font-weight: 600;
+  }
+
+  .nmsg {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .nmsg.err {
+    color: var(--bad);
+  }
+
+  .checks {
+    display: flex;
+    flex-direction: column;
+    gap: 2px;
+    margin: 0 -8px;
+  }
+
+  .check {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 7px 8px;
+    border-radius: 8px;
+    font-size: 15px;
+    cursor: pointer;
+  }
+
+  .check:hover {
+    background: var(--raised);
+  }
+
+  .check input {
+    appearance: none;
+    width: 18px;
+    height: 18px;
+    border: 1.5px solid var(--line-2);
+    border-radius: 4px;
+    margin: 0;
+    display: grid;
+    place-items: center;
+    flex: none;
+    background: var(--surface);
+  }
+
+  .check input:checked {
+    background: var(--accent);
+    border-color: var(--accent);
+  }
+
+  .check input:checked::after {
+    content: "";
+    width: 9px;
+    height: 5px;
+    border: 2px solid var(--on-accent);
+    border-top: 0;
+    border-right: 0;
+    transform: translateY(-1px) rotate(-45deg);
+  }
+
+  .check.on {
+    background: var(--accent-soft);
+    font-weight: 600;
+  }
+
+  .check .n {
+    margin-left: auto;
+    font: 13px var(--f-mono);
+    color: var(--muted);
+  }
+
+  .switch {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    font-size: 14px;
+  }
+
+  .switch small {
+    display: block;
+    font-size: 12px;
+    color: var(--muted);
+  }
+
+  .switch input {
+    appearance: none;
+    width: 36px;
+    height: 21px;
+    border-radius: 999px;
+    background: var(--line-2);
+    position: relative;
+    transition: background .15s;
+    flex: none;
+    margin: 0;
+  }
+
+  .switch input::after {
+    content: "";
+    position: absolute;
+    top: 3px;
+    left: 3px;
+    width: 15px;
+    height: 15px;
+    border-radius: 50%;
+    background: var(--surface);
+    transition: transform .15s;
+    box-shadow: 0 1px 2px rgba(0, 0, 0, .2);
+  }
+
+  .switch input:checked {
+    background: var(--accent);
+  }
+
+  .switch input:checked::after {
+    transform: translateX(15px);
+  }
+
+  .resetall {
+    border: 0;
+    background: transparent;
+    color: var(--accent);
+    font-weight: 600;
+    font-size: 14px;
+    padding: 4px 0;
+    text-align: left;
+  }
+
+  .resetall:hover {
+    text-decoration: underline;
+  }
+
+  .fbody>.resetall {
+    margin-top: 14px;
+  }
+
+  .sheet-foot {
+    display: none;
+  }
+
+  /* results panel */
+  .results {
+    padding: 12px 14px 16px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+  }
+
+  .rhead {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 14px;
+    align-items: center;
+    justify-content: space-between;
+    padding: 2px 0 12px;
+    border-bottom: 1px solid var(--line);
+  }
+
+  .rcount {
+    font: 700 26px/1.2 var(--f-display);
+    letter-spacing: -.015em;
+  }
+
+  .rcount span {
+    color: var(--ink-2);
+    font: 400 17px var(--f-body);
+    margin-left: 8px;
+    letter-spacing: 0;
+  }
+
+  .rtools {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px 22px;
+    align-items: center;
+    min-width: 0;
+  }
+
+  .viewseg {
+    display: inline-flex;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    border-radius: 9px;
+    padding: 3px;
+    gap: 3px;
+  }
+
+  .viewseg button {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    border-radius: 7px;
+    padding: 6px 18px;
+    font-size: 14.5px;
+    font-weight: 500;
+  }
+
+  .viewseg button[aria-pressed="true"] {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .sortby {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  .sortby select {
+    padding: 8px 12px;
+    border-radius: 8px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 14px;
+    min-width: 170px;
+  }
+
+  .openfilters {
+    display: none;
+  }
+
+  .active {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px 12px;
+    align-items: center;
+  }
+
+  .active:empty {
+    display: none;
+  }
+
+  .achip {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 5px 8px 5px 14px;
+    border-radius: 999px;
+    background: var(--surface);
+    border: 1px solid var(--line-2);
+    font-size: 14px;
+    font-weight: 500;
+  }
+
+  .achip button {
+    border: 0;
+    background: transparent;
+    width: 20px;
+    height: 20px;
+    border-radius: 50%;
+    display: grid;
+    place-items: center;
+    padding: 0;
+    color: var(--ink);
+  }
+
+  .achip button:hover {
+    background: var(--raised);
+  }
+
+  .achip button svg.i {
+    width: 13px !important;
+    height: 13px !important;
+    stroke-width: 2.2;
+  }
+
+  .split {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.2fr);
+    gap: 14px;
+    align-items: start;
+  }
+
+  .split.mapmode {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .split.mapmode .listcol {
+    display: none;
+  }
+
+  .listcol {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    min-width: 0;
+  }
+
+  .mapcol {
+    position: sticky;
+    top: 14px;
+    display: flex;
+    flex-direction: column;
+    gap: 8px;
+    min-width: 0;
+  }
+
+  /* compact business cards */
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--line);
+    border-radius: 10px;
+    transition: border-color .15s, box-shadow .15s;
+    --gc: var(--g5);
+  }
+
+  .card:hover,
+  .card.hl {
+    border-color: var(--line-2);
+    box-shadow: var(--shadow);
+  }
+
+  .card.open {
+    border-color: var(--line-2);
+  }
+
+  .crow {
+    display: grid;
+    grid-template-columns: 116px minmax(0, 1fr) auto;
+    gap: 14px;
+    padding: 10px;
+    cursor: pointer;
+    align-items: center;
+    border-radius: 10px;
+  }
+
+  .thumb {
+    height: 92px;
+    border-radius: 6px;
+    display: grid;
+    place-items: center;
+    font: 800 28px var(--f-display);
+    letter-spacing: -.02em;
+    color: var(--gc);
+    background: linear-gradient(135deg, color-mix(in srgb, var(--gc) 20%, var(--surface)), color-mix(in srgb, var(--gc) 8%, var(--surface)));
+    position: relative;
+    overflow: hidden;
+  }
+
+  .thumb::after {
+    content: "";
+    position: absolute;
+    inset: auto -20% -45% 40%;
+    height: 80%;
+    border-radius: 50%;
+    background: color-mix(in srgb, var(--gc) 14%, transparent);
+  }
+
+  /* a checked website's picture in place of the initials */
+  .thumb.shot img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    object-position: top left;
+    z-index: 1;
+  }
+
+  .thumb.shot::after {
+    display: none;
+  }
+
+  .siteprev {
+    display: block;
+    max-width: 420px;
+    border: 1px solid var(--line-2);
+    border-radius: 8px;
+    overflow: hidden;
+    text-decoration: none;
+    color: var(--ink-2);
+    font-size: 13px;
+    background: var(--surface);
+  }
+
+  .siteprev img {
+    display: block;
+    width: 100%;
+    height: auto;
+    aspect-ratio: 16 / 10;
+    object-fit: cover;
+    object-position: top;
+    border-bottom: 1px solid var(--line-2);
+  }
+
+  .siteprev span {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 10px;
+  }
+
+  .siteprev:hover {
+    border-color: var(--muted);
+  }
+
+  .cmain {
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+  }
+
+  .mbadge {
+    display: none;
+    margin-bottom: 2px;
+  }
+
+  .cname {
+    font: 700 18px/1.25 var(--f-display);
+    margin: 0 0 2px;
+    overflow-wrap: anywhere;
+    letter-spacing: -.01em;
+  }
+
+  .cline {
+    display: flex;
+    align-items: center;
+    gap: 9px;
+    font-size: 14px;
+    color: var(--ink-2);
+    min-width: 0;
+  }
+
+  .cline svg.i {
+    width: 15px;
+    height: 15px;
+    color: var(--ink-2);
+  }
+
+  .cline>span {
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .cline .dot {
+    width: 11px;
+    height: 11px;
+    border-radius: 50%;
+    background: var(--gc);
+    flex: none;
+    margin: 0 2px;
+  }
+
+  .cline.cat {
+    font-weight: 500;
+    color: var(--ink);
+  }
+
+  .cside {
+    display: flex;
+    flex-direction: column;
+    align-items: flex-end;
+    justify-content: space-between;
+    gap: 6px;
+    align-self: stretch;
+    padding: 4px 4px 4px 0;
+  }
+
+  .cside .chev {
+    width: 20px;
+    height: 20px;
+    color: var(--ink-2);
+    transition: transform .2s;
+    margin-block: auto;
+  }
+
+  .card.open .cside .chev {
+    transform: rotate(90deg);
+  }
+
+  .pill {
+    display: inline-flex;
+    align-items: center;
+    gap: 5px;
+    font: 600 11.5px/1 var(--f-body);
+    padding: 5px 9px;
+    border-radius: 999px;
+    white-space: nowrap;
+  }
+
+  .pill::before {
+    content: "";
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: currentColor;
+  }
+
+  .p-ok {
+    background: var(--ok-soft);
+    color: var(--ok);
+  }
+
+  .p-new {
+    background: var(--info-soft);
+    color: var(--info);
+  }
+
+  .p-due {
+    background: var(--warn-soft);
+    color: var(--warn);
+  }
+
+  .p-bad {
+    background: var(--bad-soft);
+    color: var(--bad);
+  }
+
+  .p-re {
+    background: var(--info-soft);
+    color: var(--info);
+  }
+
+  .p-fresh {
+    background: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .p-fresh::before {
+    display: none;
+  }
+
+  .dist {
+    font: 600 12px var(--f-mono);
+    color: var(--info);
+    white-space: nowrap;
+  }
+
+  .cbody {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    padding: 4px 14px 14px;
+    border-top: 1px solid var(--line);
+    margin: 0 10px;
+    padding-inline: 0;
+    padding-top: 12px;
+  }
+
+  .detail {
+    margin: 0;
+    color: var(--ink-2);
+    font-size: 14px;
+  }
+
+  .owner,
+  .meta {
+    font-size: 13px;
+    color: var(--muted);
+  }
+
+  .contact {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px 18px;
+    font-size: 14px;
+  }
+
+  .contact .it {
+    display: inline-flex;
+    align-items: center;
+    gap: 7px;
+    min-width: 0;
+    color: var(--ink-2);
+  }
+
+  .contact .it svg {
+    color: var(--muted);
+  }
+
+  .contact .phone {
+    font-family: var(--f-mono);
+    font-size: 13.5px;
+  }
+
+  .contact .none {
+    color: var(--muted);
+  }
+
+  .actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 6px;
+  }
+
+  .act {
+    display: inline-flex;
+    align-items: center;
+    gap: 6px;
+    padding: 7px 11px;
+    border-radius: 8px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 13px;
+    font-weight: 500;
+    text-decoration: none;
+    color: var(--ink);
+  }
+
+  .act:hover {
+    background: var(--raised);
+    border-color: var(--muted);
+  }
+
+  .act.primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+  }
+
+  .act.primary:hover {
+    background: var(--accent-2);
+  }
+
+  .act.on {
+    color: var(--accent);
+    border-color: var(--accent);
+    background: var(--accent-soft);
+  }
+
+  .act.on svg {
+    fill: currentColor;
+  }
+
+  .licbox {
+    border-top: 1px dashed var(--line-2);
+    padding-top: 10px;
+  }
+
+  .lictoggle {
+    display: flex;
+    width: 100%;
+    align-items: center;
+    gap: 8px;
+    border: 0;
+    background: transparent;
+    padding: 0;
+    font-size: 13.5px;
+    color: var(--ink-2);
+    text-align: left;
+  }
+
+  .lictoggle .chev {
+    transition: transform .2s;
+    color: var(--muted);
+  }
+
+  .lictoggle[aria-expanded="true"] .chev {
+    transform: rotate(90deg);
+  }
+
+  .lictoggle b {
+    font-weight: 600;
+    color: var(--ink);
+  }
+
+  .liclist {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    margin-top: 10px;
+  }
+
+  .lic {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) auto;
+    gap: 4px 12px;
+    padding: 10px 12px;
+    border-radius: 10px;
+    background: var(--raised);
+    border: 1px solid var(--line);
+  }
+
+  .lic .t {
+    font-size: 13.5px;
+    font-weight: 600;
+  }
+
+  .lic .no {
+    font: 12px var(--f-mono);
+    color: var(--muted);
+  }
+
+  .lic .dates {
+    grid-column: 1 / 3;
+    display: flex;
+    justify-content: space-between;
+    font: 11.5px var(--f-mono);
+    color: var(--muted);
+  }
+
+  .bar {
+    grid-column: 1 / 3;
+    height: 6px;
+    border-radius: 999px;
+    background: var(--line);
+    overflow: hidden;
+  }
+
+  .bar i {
+    display: block;
+    height: 100%;
+    border-radius: inherit;
+    background: var(--bc);
+  }
+
+  .lic .note {
+    grid-column: 1 / 3;
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .histhead {
+    font: 600 11.5px var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--muted);
+    margin-top: 4px;
+  }
+
+  .timeline {
+    display: flex;
+    flex-direction: column;
+    border-left: 2px solid var(--line-2);
+    margin-left: 6px;
+    padding-left: 14px;
+  }
+
+  .tl {
+    position: relative;
+    padding: 6px 0;
+    font-size: 13px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 2px 10px;
+  }
+
+  .tl::before {
+    content: "";
+    position: absolute;
+    left: -20px;
+    top: 11px;
+    width: 10px;
+    height: 10px;
+    border-radius: 50%;
+    background: var(--surface);
+    border: 2px solid var(--muted);
+  }
+
+  .tl.now::before {
+    border-color: var(--ok);
+    background: var(--ok);
+  }
+
+  .tl .t {
+    font-weight: 600;
+  }
+
+  .tl .no,
+  .tl .span {
+    font: 12px var(--f-mono);
+    color: var(--muted);
+  }
+
+  /* pager */
+  .pager {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 10px;
+    padding-top: 6px;
+  }
+
+  .pager .info {
+    font-size: 14px;
+    color: var(--ink-2);
+  }
+
+  .pages {
+    display: flex;
+    gap: 6px;
+    align-items: center;
+  }
+
+  .pages button {
+    min-width: 32px;
+    height: 32px;
+    padding: 0 8px;
+    border-radius: 7px;
+    border: 1px solid var(--line-2);
+    background: var(--surface);
+    font-size: 14px;
+    font-weight: 500;
+    display: grid;
+    place-items: center;
+  }
+
+  .pages button:hover:not(:disabled) {
+    border-color: var(--ink-2);
+  }
+
+  .pages button[aria-current="page"] {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--on-accent);
+    font-weight: 600;
+  }
+
+  .pages button:disabled {
+    opacity: .4;
+    cursor: default;
+  }
+
+  .pages .gap {
+    color: var(--muted);
+    padding: 0 2px;
+  }
+
+  /* map */
+  .mapwrap {
+    position: relative;
+    border-radius: 10px;
+    overflow: hidden;
+    border: 1px solid var(--line);
+    background: var(--map-bg);
+    height: calc(100vh - 120px);
+    max-height: 760px;
+    min-height: 420px;
+    touch-action: none;
+  }
+
+  .split.mapmode .mapwrap {
+    height: min(74vh, 760px);
+  }
+
+  .mapwrap canvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    cursor: grab;
+  }
+
+  .mapwrap canvas.dragging {
+    cursor: grabbing;
+  }
+
+  .mapctl {
+    position: absolute;
+    top: 12px;
+    right: 12px;
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    border-radius: 8px;
+    overflow: hidden;
+    border: 1px solid var(--line-2);
+    box-shadow: var(--shadow);
+  }
+
+  .mapctl button {
+    width: 38px;
+    height: 36px;
+    border: 0;
+    border-bottom: 1px solid var(--line);
+    background: var(--surface);
+    font-size: 20px;
+    line-height: 1;
+    display: grid;
+    place-items: center;
+    padding: 0;
+  }
+
+  .mapctl button:last-child {
+    border-bottom: 0;
+  }
+
+  .mapctl button:hover {
+    background: var(--raised);
+  }
+
+  .mapctl button svg.i {
+    width: 17px;
+    height: 17px;
+  }
+
+  .maplegend {
+    position: absolute;
+    right: 12px;
+    bottom: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 4px;
+    font-size: 13.5px;
+    background: var(--surface);
+    padding: 12px 16px;
+    border-radius: 10px;
+    border: 1px solid var(--line);
+    box-shadow: var(--shadow);
+  }
+
+  .maplegend b {
+    font-weight: 600;
+    font-size: 14px;
+    margin-bottom: 4px;
+  }
+
+  .maplegend span {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .maplegend i {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    display: inline-block;
+  }
+
+  .mapattr {
+    position: absolute;
+    left: 0;
+    bottom: 0;
+    font-size: 10.5px;
+    color: var(--muted);
+    background: color-mix(in srgb, var(--surface) 82%, transparent);
+    padding: 2px 6px;
+    border-top-right-radius: 6px;
+  }
+
+  .mapattr a {
+    color: inherit;
+  }
+
+  .maptip {
+    position: absolute;
+    pointer-events: none;
+    background: var(--ink);
+    color: var(--bg);
+    font-size: 12.5px;
+    padding: 6px 9px;
+    border-radius: 8px;
+    max-width: 240px;
+    transform: translate(-50%, calc(-100% - 14px));
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  .mapmeta {
+    font-size: 12.5px;
+    color: var(--muted);
+  }
+
+  .mapsel:empty {
+    display: none;
+  }
+
+  .empty {
+    text-align: center;
+    padding: 48px 20px;
+    background: var(--raised);
+    border: 1px dashed var(--line-2);
+    border-radius: var(--r);
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
+    align-items: center;
+  }
+
+  .empty h3 {
+    margin: 0;
+    font: 700 18px var(--f-display);
+  }
+
+  .empty p {
+    margin: 0;
+    color: var(--muted);
+    max-width: 46ch;
+  }
+
+  .toast {
+    position: fixed;
+    left: 50%;
+    bottom: calc(20px + env(safe-area-inset-bottom, 0px));
+    transform: translate(-50%, 20px);
+    opacity: 0;
+    background: var(--ink);
+    color: var(--bg);
+    padding: 10px 16px;
+    border-radius: 10px;
+    font-size: 14px;
+    transition: .2s;
+    pointer-events: none;
+    z-index: 50;
+  }
+
+  .toast.show {
+    opacity: 1;
+    transform: translate(-50%, 0);
+  }
+
+  footer {
+    border-top: 1px solid var(--line);
+    padding-block: 26px 48px;
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(min(260px, 100%), 1fr));
+    gap: 18px 28px;
+    color: var(--muted);
+    font-size: 13px;
+  }
+
+  footer h4 {
+    margin: 0 0 4px;
+    font: 600 12px var(--f-mono);
+    text-transform: uppercase;
+    letter-spacing: .07em;
+    color: var(--ink-2);
+  }
+
+  footer p {
+    margin: 0;
+  }
+
+  /* narrower screens: list only in list view; map on its own in map view */
+  @media (max-width: 1199px) {
+    .split {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .split:not(.mapmode) .mapcol {
+      display: none;
+    }
+
+    .mapcol {
+      position: static;
+    }
+
+    .stats {
+      gap: 12px;
+    }
+  }
+
+  @media (max-width: 900px) {
+    .stats {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .layout,
+    .layout.collapsed {
+      grid-template-columns: minmax(0, 1fr);
+    }
+
+    .openfilters {
+      display: inline-flex;
+    }
+
+    #collapse {
+      display: none;
+    }
+
+    .closesheet {
+      display: inline-flex;
+    }
+
+    aside.filters {
+      position: fixed;
+      inset: auto 0 0 0;
+      z-index: 40;
+      max-height: 84vh;
+      border-radius: 18px 18px 0 0;
+      padding: 0 max(18px, env(safe-area-inset-right, 0px)) calc(18px + env(safe-area-inset-bottom, 0px)) max(18px, env(safe-area-inset-left, 0px));
+      box-shadow: 0 -10px 40px rgba(0, 0, 0, .25);
+      transform: translateY(105%);
+      transition: transform .25s;
+      top: auto;
+    }
+
+    aside.filters.open {
+      transform: none;
+    }
+
+    .sheet-foot {
+      display: block;
+      position: sticky;
+      bottom: 0;
+      background: var(--surface);
+      padding-top: 12px;
+    }
+
+    .sheet-foot button {
+      width: 100%;
+      padding: 13px;
+      font-size: 15px;
+    }
+
+    .scrim {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, .35);
+      z-index: 35;
+    }
+  }
+
+  @media (max-width: 600px) {
+
+    .asof,
+    .byline {
+      display: none;
+    }
+
+    .ghost .lbl {
+      display: none;
+    }
+
+    .searchbox .btn-red {
+      padding: 10px 14px;
+      font-size: 15px;
+    }
+
+    .crow {
+      grid-template-columns: 56px minmax(0, 1fr) 20px;
+      gap: 10px;
+      align-items: start;
+    }
+
+    .thumb {
+      height: 56px;
+      font-size: 19px;
+    }
+
+    .cside .pill {
+      display: none;
+    }
+
+    .mbadge {
+      display: flex !important;
+    }
+
+    .cline>span {
+      white-space: normal;
+    }
+
+    .cname {
+      font-size: 16px;
+    }
+
+    .rcount {
+      font-size: 21px;
+    }
+
+    .sortby>span {
+      display: none;
+    }
+
+    .sortby select {
+      min-width: 0;
+    }
+
+    .stat .v {
+      font-size: 24px;
+    }
+
+    .pager {
+      justify-content: center;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    * {
+      transition: none !important;
+    }
+  }
+</style>
+</head>
+<body>
+
+<div class="wrap">
+  <header class="topbar">
+    <div class="brand">
+      <div class="logo">Licensed<b>TO</b></div>
+      <div class="asof" id="asof"></div><a class="byline" href="https://samandarali.github.io/" target="_blank"
+        rel="noopener">by <b>Mojgan Samandar</b></a>
+    </div>
+    <div class="tops">
+      <button class="ghost" id="themeBtn" type="button" aria-label="Switch to dark mode"></button>
+      <button class="ghost" id="savedBtn" type="button" aria-pressed="false">
+        <svg class="i" viewBox="0 0 24 24">
+          <path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z" />
+        </svg>
+        <span class="lbl">Saved</span> <span class="badge" id="savedN">0</span>
+      </button>
+    </div>
+  </header>
+
+  <section class="hero">
+    <h1>Explore Toronto’s licensed businesses<em>.</em></h1>
+    <p id="heroP"></p>
+    <form class="searchbox" id="searchForm" role="search" autocomplete="off">
+      <svg class="i" viewBox="0 0 24 24">
+        <circle cx="11" cy="11" r="7" />
+        <path d="m20 20-3.5-3.5" />
+      </svg>
+      <input id="q" type="search"
+        placeholder="Search by business name, address, category (e.g., “bakery”), postal code (e.g., “M6J”) or licence no."
+        aria-label="Search businesses">
+      <button class="btn-red" type="submit">Search</button>
+    </form>
+    <div class="stats" id="stats"></div>
+  </section>
+
+  <div class="layout" id="layout">
+    <aside class="filters panel" id="filters" aria-label="Filters">
+      <div class="fhead">
+        <h3><svg class="i" viewBox="0 0 24 24">
+            <path d="M3 5h18l-7 8.5V19l-4 2v-7.5z" />
+          </svg><span>Filters</span></h3>
+        <button class="linkbtn" type="button" id="collapse" aria-label="Collapse filters"><span>Collapse</span><svg
+            class="i" viewBox="0 0 24 24">
+            <path d="m15 6-6 6 6 6" />
+          </svg></button>
+        <button class="linkbtn closesheet" type="button" id="closeFilters">Close</button>
+      </div>
+      <div class="fbody">
+        <details class="fsec" open>
+          <summary>Location <svg class="i" viewBox="0 0 24 24">
+              <path d="m6 9 6 6 6-6" />
+            </svg></summary>
+          <div class="fcontent">
+            <form class="pc" id="nearForm">
+              <svg class="i" viewBox="0 0 24 24">
+                <path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11z" />
+                <circle cx="12" cy="10" r="2.2" />
+              </svg>
+              <input id="nearIn" placeholder="Postal code, e.g. M6J" aria-label="Postal code to search near"
+                maxlength="7">
+              <button class="btn-red" type="submit">Go</button>
+            </form>
+            <button class="me" type="button" id="nearMe"><svg class="i" viewBox="0 0 24 24">
+                <path d="m3 11 18-8-8 18-2-8z" />
+              </svg>Near me</button>
+            <div class="radius" id="radius" role="group" aria-label="Distance">
+              <button type="button" data-r="250">250 m</button><button type="button" data-r="500">500 m</button><button
+                type="button" data-r="1000" aria-pressed="true">1 km</button><button type="button" data-r="2000">2
+                km</button>
+            </div>
+            <div class="nmsg" id="nearMsg">Or click an empty spot on the map, or press “Nearby” on any business.</div>
+            <label class="sub" for="ward">Ward</label>
+            <select id="ward">
+              <option value="">All of Toronto</option>
+            </select>
+          </div>
+        </details>
+        <details class="fsec" open>
+          <summary>Business category <svg class="i" viewBox="0 0 24 24">
+              <path d="m6 9 6 6 6-6" />
+            </svg></summary>
+          <div class="fcontent">
+            <div class="checks" id="types"></div>
+            <label class="sub" for="cat">Licence category</label>
+            <select id="cat"></select>
+          </div>
+        </details>
+        <details class="fsec">
+          <summary>Licence status <svg class="i" viewBox="0 0 24 24">
+              <path d="m6 9 6 6 6-6" />
+            </svg></summary>
+          <div class="fcontent">
+            <select id="lstat" aria-label="Licence status">
+              <option value="">Any status</option>
+              <option value="1">Renewed</option>
+              <option value="0">First year</option>
+              <option value="due">Renewal due within 30 days</option>
+              <option value="2">Renewal not recorded</option>
+            </select>
+            <label class="switch"><span>Only confirmed licences <small>(hide “renewal not
+                  recorded”)</small></span><input type="checkbox" id="confirmedOnly"></label>
+          </div>
+        </details>
+        <details class="fsec">
+          <summary>Issue / renewal date <svg class="i" viewBox="0 0 24 24">
+              <path d="m6 9 6 6 6-6" />
+            </svg></summary>
+          <div class="fcontent">
+            <label class="sub" for="when">First licensed</label>
+            <select id="when">
+              <option value="7">In the last 7 days</option>
+              <option value="30">In the last 30 days</option>
+              <option value="90">In the last 3 months</option>
+              <option value="365">In the last 12 months</option>
+              <option value="1825">In the last 5 years</option>
+              <option value="0" selected>Any time</option>
+            </select>
+          </div>
+        </details>
+        <button class="resetall" type="button" id="resetAll">Reset all filters</button>
+        <div class="sheet-foot"><button class="btn-red" type="button" id="applyFilters">Show results</button></div>
+      </div>
+    </aside>
+
+    <section class="results panel" id="results" aria-label="Results">
+      <div class="rhead">
+        <div class="rcount" id="count" aria-live="polite">Loading businesses…</div>
+        <div class="rtools">
+          <button class="ghost openfilters" type="button" id="openFilters">
+            <svg class="i" viewBox="0 0 24 24">
+              <path d="M4 6h16M7 12h10M10 18h4" />
+            </svg> Filters <span class="badge" id="fN" hidden>0</span>
+          </button>
+          <div class="viewseg" role="group" aria-label="View">
+            <button type="button" data-view="list" aria-pressed="true"><svg class="i" viewBox="0 0 24 24">
+                <path d="M8 6h12M8 12h12M8 18h12M4 6h.01M4 12h.01M4 18h.01" />
+              </svg>List</button>
+            <button type="button" data-view="map" aria-pressed="false"><svg class="i" viewBox="0 0 24 24">
+                <path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14" />
+              </svg>Map</button>
+          </div>
+          <label class="sortby"><span>Sort by</span>
+            <select id="sort">
+              <option value="new">Newest first</option>
+              <option value="oldnew">Oldest first</option>
+              <option value="old">Oldest licence first</option>
+              <option value="az">Name A–Z</option>
+              <option value="exp">Renewal date</option>
+              <option value="dist" hidden>Distance</option>
+            </select>
+          </label>
+        </div>
+      </div>
+      <div class="active" id="active"></div>
+      <div class="split" id="split">
+        <div class="listcol">
+          <div class="listcol" id="feed"></div>
+          <div class="pager" id="pager"></div>
+        </div>
+        <div class="mapcol" id="mapView">
+          <div class="mapwrap" id="mapwrap">
+            <canvas id="map" aria-label="Map of matching businesses in Toronto"></canvas>
+            <div class="mapctl">
+              <button type="button" id="zin" aria-label="Zoom in">+</button>
+              <button type="button" id="zout" aria-label="Zoom out">−</button>
+              <button type="button" id="zfit" aria-label="Show all of Toronto"><svg class="i" viewBox="0 0 24 24">
+                  <path d="M4 9V4h5M20 9V4h-5M4 15v5h5M20 15v5h-5" />
+                </svg></button>
+              <button type="button" id="zme" aria-label="Show businesses near me"><svg class="i" viewBox="0 0 24 24">
+                  <path d="m3 11 18-8-8 18-2-8z" />
+                </svg></button>
+            </div>
+            <div class="maplegend" id="legend"></div>
+            <div class="maptip" id="maptip" hidden></div>
+            <div class="mapattr">Tiles © <a href="https://www.esri.com/" target="_blank" rel="noopener">Esri</a> — Esri,
+              HERE, Garmin, © <a href="https://www.openstreetmap.org/copyright" target="_blank"
+                rel="noopener">OpenStreetMap</a> contributors</div>
+          </div>
+          <div class="mapmeta" id="mapmeta"></div>
+          <div class="mapsel" id="mapsel"></div>
+        </div>
+      </div>
+    </section>
+  </div>
+
+  <footer>
+    <div>
+      <h4>Source</h4>
+      <p>City of Toronto Open Data, Municipal Licensing &amp; Standards, “Business Licences and Permits”, extract of
+        <span id="snap"></span>. Open Government Licence – Toronto.
+      </p>
+    </div>
+    <div>
+      <h4>About this site</h4>
+      <p>LicensedTO is an independent project built by <a href="https://samandarali.github.io/" target="_blank"
+          rel="noopener">Mojgan Samandar</a>. It is not affiliated with or endorsed by the City of Toronto. Information is shown as is, with no guarantee;
+        see the <a href="terms.html">Terms of use and privacy note</a>.</p>
+      <p>Inspired by <a href="https://nowservingto.com/" target="_blank" rel="noopener">NowServingTO</a> by Joshua
+        Opolko.</p>
+    </div>
+    <div>
+      <h4>Licence validity</h4>
+      <p>The City's file has no expiry field. Licences run one year and renew on the anniversary of the issue date.
+        <i>Renewed</i> means the record was updated in the 120 days before the anniversary. <i>Renewal not recorded</i>
+        means the term ended with no renewal update yet. Confirm with 311 before relying on a status.
+      </p>
+    </div>
+    <div>
+      <h4>Websites &amp; phone numbers</h4>
+      <p>Phone numbers are not shown, to protect the privacy of sole proprietors who list a personal number. The City's data has no websites.
+        A “Website” button and a picture of the site appear only where it has been checked that the site shows the
+        licensed address or phone. Elsewhere “Find website” runs a web search, so check that the result is the right business.</p>
+    </div>
+    <div>
+      <h4>Map locations</h4>
+      <p>Each business is placed by matching its address to the City's Address Points file. Most match exactly. Some are
+        placed at the nearest number on the same street, or at the centre of their postal code, and the card says so.
+        Businesses with an address outside Toronto aren't shown on the map. Street map tiles © Esri (Esri, HERE, Garmin,
+        OpenStreetMap contributors); ward outlines from the City Wards dataset.</p>
+    </div>
+    <div>
+      <h4>Not listed</h4>
+      <p>Licences held by individuals for a vehicle, cart, sign or donation bin, whose addresses are usually homes.
+        Owner names appear only when the owner is a company.</p>
+    </div>
+    <div>
+      <h4>Area only</h4>
+      <p>Businesses licensed to an individual without business premises, such as driving instructors, show only their
+        postal area and ward. Their licence address is usually a home, so it isn't shown and they aren't placed on the
+        map.</p>
+    </div>
+  </footer>
+</div>
+<div class="toast" id="toast" role="status"></div>
+
+<!-- checked websites (window.LTO_SITES), written by tools/licensedto-websites.py; the page works without it -->
+<script src="websites.js?v=2026-11-24"></script>
+<script>
+  // The data lives in directory_data.js (it sets window.LTO_DATA). A script file loads both on the website and when
+  // index.html is opened straight from disk (file://), where fetch() is blocked.
+  new Promise((ok, no) => {
+    const tag = document.createElement("script");
+    tag.src = "directory_data.js?v=2026-11-27-nophone";
+    tag.onload = () => (window.LTO_DATA ? ok(window.LTO_DATA) : no(new Error("no data")));
+    tag.onerror = () => no(new Error("data file missing"));
+    document.head.appendChild(tag);
+  }).then((D) => {
+    (function () {
+      const WARDS = ["", "Etobicoke North", "Etobicoke Centre", "Etobicoke–Lakeshore", "Parkdale–High Park", "York South–Weston",
+        "York Centre", "Humber River–Black Creek", "Eglinton–Lawrence", "Davenport", "Spadina–Fort York", "University–Rosedale",
+        "Toronto–St. Paul's", "Toronto Centre", "Toronto–Danforth", "Don Valley West", "Don Valley East", "Don Valley North",
+        "Willowdale", "Beaches–East York", "Scarborough Southwest", "Scarborough Centre", "Scarborough–Agincourt",
+        "Scarborough North", "Scarborough–Guildwood", "Scarborough–Rouge Park"];
+      const GCOL = ["var(--g0)", "var(--g1)", "var(--g2)", "var(--g3)", "var(--g4)", "var(--g5)"];
+      const $ = (id) => document.getElementById(id);
+      const esc = (s) => String(s).replace(/[&<>"]/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" }[c]));
+      const nf = (n) => n.toLocaleString("en-CA");
+      const DAY = 864e5, snap = new Date(D.snapshot + "T12:00:00");
+      const daysTo = (iso) => Math.round((new Date(iso + "T12:00:00") - snap) / DAY);
+      const fmtDate = (iso) => new Date(iso + "T12:00:00").toLocaleDateString("en-US", { day: "numeric", month: "short", year: "numeric" });
+      const plural = (n, w) => `${nf(n)} ${w}${n === 1 ? "" : "s"}`;
+      const ICON = {
+        pin: '<svg class="i" viewBox="0 0 24 24"><path d="M12 21s-6-5.3-6-11a6 6 0 0 1 12 0c0 5.7-6 11-6 11z"/><circle cx="12" cy="10" r="2.2"/></svg>',
+        clock: '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.5"/><path d="M12 7.5V12l3 2"/></svg>',
+        cal: '<svg class="i" viewBox="0 0 24 24"><rect x="4" y="5" width="16" height="15" rx="2"/><path d="M4 10h16M9 3v4M15 3v4"/></svg>',
+        phone: '<svg class="i" viewBox="0 0 24 24"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2"/></svg>',
+        globe: '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M3 12h18M12 3a14 14 0 0 1 0 18M12 3a14 14 0 0 0 0 18"/></svg>',
+        route: '<svg class="i" viewBox="0 0 24 24"><circle cx="6" cy="19" r="2"/><circle cx="18" cy="5" r="2"/><path d="M8 19h8a3.5 3.5 0 0 0 0-7H8a3.5 3.5 0 0 1 0-7h8"/></svg>',
+        map: '<svg class="i" viewBox="0 0 24 24"><path d="m9 4-6 2v14l6-2 6 2 6-2V4l-6 2-6-2zM9 4v14M15 6v14"/></svg>',
+        copy: '<svg class="i" viewBox="0 0 24 24"><rect x="9" y="9" width="11" height="11" rx="2"/><path d="M5 15V5a2 2 0 0 1 2-2h10"/></svg>',
+        heart: '<svg class="i" viewBox="0 0 24 24"><path d="M12 20s-7-4.4-7-10a4 4 0 0 1 7-2.6A4 4 0 0 1 19 10c0 5.6-7 10-7 10z"/></svg>',
+        chev: '<svg class="i chev" viewBox="0 0 24 24"><path d="m9 6 6 6-6 6"/></svg>',
+        left: '<svg class="i" viewBox="0 0 24 24"><path d="m15 6-6 6 6 6"/></svg>',
+        x: '<svg class="i" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6 6 18"/></svg>',
+        near: '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2"/></svg>',
+        filePlus: '<svg class="i" viewBox="0 0 24 24"><path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8z"/><path d="M14 3v5h5M12 11v6M9 14h6"/></svg>',
+        building: '<svg class="i" viewBox="0 0 24 24"><rect x="5" y="3" width="14" height="18" rx="1"/><path d="M9 7h1M14 7h1M9 11h1M14 11h1M9 15h1M14 15h1M10 21v-3h4v3"/></svg>',
+      };
+
+      // ---- data ----
+      const SITES = window.LTO_SITES || {};  // licence number -> [checked website, picture]
+      const B = D.rows.map((r) => {
+        const o = {
+          name: r[0], owner: r[1], cats: r[2], detail: r[3], street: r[4], city: r[5], postal: r[6], ward: r[7],
+          phone: r[8], ext: r[9], first: r[10], latest: r[11], nlic: r[12], lat: r[14], lon: r[15], gq: r[16],
+          hist: (r[17] || []).map((h) => ({ no: h[0], cat: h[1], issued: h[2], cancelled: h[3] })), area: r[18] === 1
+        };
+        o.since = o.hist.reduce((m, h) => (h.issued && h.issued < m ? h.issued : m), o.first);
+        // oldest licence on record at this address: current or earlier (cancelled) ones
+        o.oldest = [...r[13].map((l) => ({ no: l[0], cat: l[1], issued: l[2], now: true })), ...o.hist.filter((h) => h.issued)]
+          .sort((x, y) => x.issued.localeCompare(y.issued))[0];
+        o.lic = r[13].map((l) => ({ no: l[0], cat: l[1], issued: l[2], st: l[3], until: l[4], left: daysTo(l[4]) }));
+        const s = o.lic.map((l) => SITES[l.no]).find(Boolean);
+        if (s) o.site = { url: s[0], pic: s[1], host: s[0].replace(/^https?:\/\/(www\.)?/, "").replace(/\/$/, "") };
+        o.lic.forEach((l) => { l.due = l.st !== 2 && l.left <= 30; l.code = l.st === 2 ? "bad" : l.due ? "due" : l.st === 0 ? "new" : "ok"; });
+        const rank = { bad: 3, due: 2, new: 1, ok: 0 };
+        o.worst = o.lic.reduce((w, l) => (rank[l.code] > rank[w] ? l.code : w), "ok");
+        o.nextExp = Math.min(...o.lic.filter((l) => l.st !== 2).map((l) => l.left).concat([99999]));
+        o.age = -daysTo(o.first);
+        o.groups = [...new Set(r[2].map((c) => D.cats[c][1]))];
+        o.key = o.name + "|" + (o.area ? o.postal + " area" : o.street);
+        o.hay = [o.name, o.owner, o.detail, o.street, o.city, o.postal, o.phone, WARDS[o.ward] || "",
+        ...r[2].map((c) => D.cats[c][0]), ...o.lic.map((l) => l.no)].join(" ").toLowerCase();
+        return o;
+      });
+
+      let saved = new Set();
+      try { saved = new Set(JSON.parse(localStorage.getItem("ltoSaved") || "[]")); } catch (e) { }
+      const persist = () => { try { localStorage.setItem("ltoSaved", JSON.stringify([...saved])); } catch (e) { } updSaved(); };
+      const updSaved = () => { $("savedN").textContent = saved.size; $("savedN").hidden = !saved.size; };
+
+      // ---- state ----
+      const DEF = { q: "", groups: [], cat: "", ward: "", when: "0", lstat: "", confirmed: false, phone: false, saved: false, sort: "new", near: null, radius: 1000 };
+      let view = "list";
+      // metres between two lat/lon points (equirectangular; fine at city scale)
+      const KX = Math.cos(43.7 * Math.PI / 180);
+      const metres = (la1, lo1, la2, lo2) => Math.hypot((lo2 - lo1) * KX, la2 - la1) * 111320;
+      const fmtDist = (m) => m < 1000 ? `${Math.round(m / 10) * 10} m` : `${(m / 1000).toFixed(1)} km`;
+      const S = { ...DEF, groups: [] };
+      let list = [], page = 0;
+      const PAGE = 20;
+      const pageItems = () => list.slice(page * PAGE, page * PAGE + PAGE);
+
+      // ---- build controls ----
+      $("asof").textContent = "Data updated " + fmtDate(D.snapshot);
+      if (D.update) {   // what changed since the previous update (written by tools/update-licensedto.py)
+        const U = D.update, since = new Date(U.from + "T12:00:00").toLocaleDateString("en-US", { day: "numeric", month: "short" });
+        $("asof").textContent += ` · ${nf(U.new_businesses)} new`;
+        $("asof").title = `Since ${since}: ${nf(U.new_businesses)} new business${U.new_businesses === 1 ? "" : "es"}, ${nf(U.closed_businesses)} closed; ${plural(U.new_licences, "new licence")}, ${plural(U.cancelled_licences, "cancelled licence")}`;
+      }
+      $("snap").textContent = D.snapshot;
+      $("heroP").textContent = `Search Toronto’s business licence directory of ${nf(B.length)} businesses. Find licensed businesses by name, address, category and more, and see when licences were issued, renewed and expire.`;
+      const statDefs = [
+        { k: "w7", ic: ICON.filePlus, t: "Newly issued licences", s: "This week", v: B.filter((b) => b.age <= 7).length, set: { when: "7", lstat: "" } },
+        { k: "due", ic: ICON.cal, t: "Renewals due", s: "Within 30 days", v: B.filter((b) => b.lic.some((l) => l.due)).length, set: { when: "0", lstat: "due" } },
+        { k: "all", ic: ICON.building, t: "Total listings", s: "Active business licences", v: B.length },
+      ];
+      $("stats").innerHTML = statDefs.map((t) => `<${t.set ? `button type="button" data-stat="${t.k}" aria-pressed="false"` : "div"} class="stat">
+    <span class="ic">${t.ic}</span><span class="tx"><span class="t">${t.t}</span><span class="s">${t.s}</span></span>
+    <span class="v">${nf(t.v)}</span></${t.set ? "button" : "div"}>`).join("");
+      $("stats").onclick = (e) => {
+        const b = e.target.closest("[data-stat]"); if (!b) return;
+        const t = statDefs.find((x) => x.k === b.dataset.stat);
+        const on = b.getAttribute("aria-pressed") === "true";
+        Object.assign(S, on ? { when: DEF.when, lstat: "" } : t.set);
+        run(true);
+      };
+      const gCount = D.groups.map((_, g) => B.filter((b) => b.groups.includes(g)).length);
+      $("types").innerHTML = [[-1, "All types", B.length], ...D.groups.map((g, k) => [k, g, gCount[k]])]
+        .map(([k, l, n]) => `<label class="check" data-g="${k}"><input type="checkbox" value="${k}">${esc(l)}<span class="n">${nf(n)}</span></label>`).join("");
+      $("types").addEventListener("change", (e) => {
+        const k = +e.target.value;
+        if (k < 0) S.groups = [];
+        else S.groups = e.target.checked ? [...new Set([...S.groups, k])] : S.groups.filter((g) => g !== k);
+        if (S.groups.length === D.groups.length) S.groups = [];
+        S.cat = ""; run(true);
+      });
+      function fillCats() {
+        const counts = {};
+        B.forEach((b) => b.cats.forEach((c) => { if (!S.groups.length || S.groups.includes(D.cats[c][1])) counts[c] = (counts[c] || 0) + 1; }));
+        const opts = Object.keys(counts).sort((a, b) => counts[b] - counts[a]);
+        $("cat").innerHTML = `<option value="">All categories</option>` + opts.map((c) => `<option value="${c}">${esc(D.cats[c][0])} (${nf(counts[c])})</option>`).join("");
+        $("cat").value = opts.includes(S.cat) ? S.cat : "";
+      }
+      $("ward").innerHTML += WARDS.slice(1).map((w, k) => `<option value="${k + 1}">Ward ${k + 1} · ${esc(w)}</option>`).join("");
+
+      function syncControls() {
+        $("q").value = S.q; fillCats(); $("ward").value = S.ward; $("when").value = S.when; $("lstat").value = S.lstat;
+        $("confirmedOnly").checked = S.confirmed; $("sort").value = S.sort;
+        $("sort").querySelector('[value="dist"]').hidden = !S.near;
+        [...$("radius").children].forEach((b) => b.setAttribute("aria-pressed", +b.dataset.r === S.radius));
+        document.querySelectorAll("[data-view]").forEach((b) => b.setAttribute("aria-pressed", b.dataset.view === view));
+        [...$("types").children].forEach((l) => {
+          const k = +l.dataset.g, on = k < 0 ? !S.groups.length : S.groups.includes(k);
+          l.querySelector("input").checked = on; l.classList.toggle("on", on && k >= 0);
+        });
+        $("savedBtn").setAttribute("aria-pressed", S.saved);
+        [...$("stats").querySelectorAll("[data-stat]")].forEach((b) => {
+          const t = statDefs.find((x) => x.k === b.dataset.stat);
+          b.setAttribute("aria-pressed", S.when === t.set.when && S.lstat === t.set.lstat);
+        });
+        const n = ["cat", "ward", "lstat"].filter((k) => S[k]).length + S.groups.length + S.confirmed + (S.when !== DEF.when) + !!S.near;
+        $("fN").hidden = !n; $("fN").textContent = n;
+      }
+
+      // ---- filter + sort ----
+      function filtered() {
+        const words = S.q.trim().toLowerCase().split(/\s+/).filter(Boolean);
+        const days = +S.when, cat = S.cat === "" ? null : +S.cat, ward = +S.ward || 0;
+        let r = B.filter((b) =>
+          (!days || b.age <= days) && (!S.groups.length || b.groups.some((g) => S.groups.includes(g))) && (cat === null || b.cats.includes(cat)) &&
+          (!ward || b.ward === ward) && (!S.confirmed || b.lic.some((l) => l.st !== 2)) && (!S.saved || saved.has(b.key)) &&
+          (!S.lstat || b.lic.some((l) => (S.lstat === "due" ? l.due : l.st === +S.lstat))) &&
+          words.every((w) => b.hay.includes(w)) &&
+          (!S.near || (b.lat != null && (b.dist = metres(S.near.lat, S.near.lon, b.lat, b.lon)) <= S.radius)));
+        if (S.sort === "dist" && S.near) r.sort((a, b) => a.dist - b.dist);
+        else if (S.sort === "oldnew") r.reverse();          // reverse of "Newest first" (current licence date)
+        else if (S.sort === "old") r.sort((a, b) => a.oldest.issued.localeCompare(b.oldest.issued));
+        else if (S.sort === "az") r.sort((a, b) => a.name.localeCompare(b.name));
+        else if (S.sort === "exp") r.sort((a, b) => a.nextExp - b.nextExp);
+        return r;
+      }
+
+      // ---- rendering ----
+      const fmtPhone = (p, x) => p.length === 10 ? `(${p.slice(0, 3)}) ${p.slice(3, 6)}-${p.slice(6)}${x ? " ext. " + x : ""}` : p;
+      const ago = (d) => d <= 0 ? "today" : d === 1 ? "yesterday" : d < 14 ? `${d} days ago` : d < 60 ? `${Math.round(d / 7)} weeks ago`
+        : d < 730 ? `${Math.round(d / 30.4)} months ago` : `${Math.round(d / 365.25)} years ago`;
+      const initials = (s) => s.replace(/[^A-Za-z0-9 ]/g, "").split(/\s+/).filter(Boolean).slice(0, 2).map((w) => w[0]).join("").toUpperCase() || "•";
+      let hlRe = null;
+      const hl = (s) => { const e = esc(s); return hlRe ? e.replace(hlRe, "<mark>$1</mark>") : e; };
+      const PILL = { ok: ["p-ok", "Renewed"], new: ["p-new", "First year"], due: ["p-due", "Renewal due"], bad: ["p-bad", "Renewal not recorded"] };
+
+      function licHTML(l) {
+        const until = new Date(l.until + "T12:00:00");
+        const termStart = new Date(until); termStart.setFullYear(until.getFullYear() - 1);
+        let pct = Math.max(0, Math.min(100, ((snap - termStart) / (until - termStart)) * 100));
+        const col = { ok: "var(--ok)", new: "var(--info)", due: "var(--warn)", bad: "var(--bad)" }[l.code];
+        const note = l.st === 2 ? `Term ended ${fmtDate(l.until)}${l.left < 0 ? `, ${plural(-l.left, "day")} ago` : " on the data date"}; no renewal on record yet.`
+          : `Valid until ${fmtDate(l.until)}: ${plural(l.left, "day")} left.${l.due ? " Renewal is due soon." : ""}`;
+        if (l.st === 2) pct = 100;
+        return `<div class="lic"><div><div class="t">${esc(D.cats[l.cat][0])}</div><div class="no">${esc(l.no)} · issued ${fmtDate(l.issued)}</div></div>
+      <span class="pill ${PILL[l.code][0]}">${l.code === "due" ? `Due in ${plural(l.left, "day")}` : PILL[l.code][1]}</span>
+      <div class="bar" title="Share of the current one-year term used"><i style="width:${pct.toFixed(0)}%;--bc:${col}"></i></div>
+      <div class="dates"><span>term ${fmtDate(termStart.toISOString().slice(0, 10))}</span><span>${l.st === 2 ? "ended" : "ends"} ${fmtDate(l.until)}</span></div>
+      <div class="note">${note}</div></div>`;
+      }
+      const span = (a, z) => {
+        if (!a || !z) return "";
+        const m = Math.round((new Date(z) - new Date(a)) / (DAY * 30.44));
+        return m < 1 ? "under a month" : m < 24 ? plural(m, "month") : plural(Math.round(m / 12), "year");
+      };
+      function histHTML(b) {
+        if (!b.hist.length) return "";
+        const now = b.lic.slice().sort((x, y) => y.issued.localeCompare(x.issued))
+          .map((l) => `<div class="tl now"><span class="t">${esc(D.cats[l.cat][0])}</span><span class="no">${esc(l.no)}</span><span class="span">${fmtDate(l.issued)} – now</span></div>`).join("");
+        const past = b.hist.map((h) => `<div class="tl"><span class="t">${esc(D.cats[h.cat][0])}</span>${h.no ? `<span class="no">${esc(h.no)}</span>` : ""}
+      <span class="span">${h.issued ? fmtDate(h.issued) : "?"} – ${h.cancelled ? fmtDate(h.cancelled) : "?"}${h.issued && h.cancelled ? ` · ${span(h.issued, h.cancelled)}` : ""}</span></div>`).join("");
+        return `<div class="histhead">Licence history${b.area ? "" : " at this address"}</div><div class="timeline">${now}${past}</div>
+      <div class="note" style="font-size:12.5px;color:var(--muted)">Earlier licences held under the same business name at this address, newest first. A new licence number usually means a change such as a new owner or corporation.</div>`;
+      }
+      // area-only listings (an individual with no business premises): postal area only, never a street address
+      const addrOf = (b) => b.area ? `${b.postal} area, ${b.city || "Toronto"}, ON`
+        : `${b.street}${b.city ? ", " + b.city : ", Toronto"}, ON ${b.postal}`;
+      // the licence line on a card: the most recently issued current licence and its state
+      function licLine(b) {
+        const l = b.lic.slice().sort((x, y) => y.issued.localeCompare(x.issued))[0];
+        if (l.st === 1) return `Licence renewed · valid to ${fmtDate(l.until)}`;
+        if (l.st === 2) return `Renewal not recorded · term ended ${fmtDate(l.until)}`;
+        return `Licence issued: ${fmtDate(l.issued)}`;
+      }
+
+      function bodyHTML(b) {
+        const addr = addrOf(b), q = encodeURIComponent(b.area ? `${b.name} Toronto` : `${b.name} ${addr}`), on = saved.has(b.key);
+        const nextLic = b.lic.filter((l) => l.st !== 2).sort((x, y) => x.left - y.left)[0];
+        const summary = (nextLic ? `next renewal <b>${fmtDate(nextLic.until)}</b>` : `<b>renewal not recorded</b>`) +
+          (b.hist.length ? ` · ${plural(b.hist.length, "earlier licence")} here since ${b.since.slice(0, 4)}` : "");
+        const cats = b.cats.map((c) => esc(D.cats[c][0])).join(" · ");
+        return `
+      ${b.detail ? `<p class="detail">${hl(b.detail)}</p>` : ""}
+      <div class="meta">${cats}${b.hist.length ? ` · at this address since ${b.since.slice(0, 4)}` : ` · first licensed ${ago(b.age)}`}${b.ward ? ` · Ward ${b.ward} ${esc(WARDS[b.ward])}` : ""}${b.owner ? ` · operated by ${hl(b.owner)}` : ""}</div>
+      <div class="contact">
+        ${b.area ? `<span class="it none">Area only: licensed to an individual without business premises</span>` : b.gq === 3 ? `<span class="it none">Map shows the postal-code area</span>` : b.gq === 2 ? `<span class="it none">Map position approximate</span>` : b.lat == null ? `<span class="it none">Not on the map</span>` : ""}
+      </div>
+      ${b.site?.pic ? `<a class="siteprev" href="${esc(b.site.url)}" target="_blank" rel="noopener"><img src="${esc(b.site.pic)}" alt="Home page of ${esc(b.name)}" loading="lazy" width="640" height="400"><span>${ICON.globe}${esc(b.site.host)}</span></a>` : ""}
+      <div class="actions">
+        ${b.area ? "" : `<a class="act primary" href="https://www.google.com/maps/dir/?api=1&destination=${encodeURIComponent(addr)}" target="_blank" rel="noopener">${ICON.route}Directions</a>`}
+        ${b.lat != null ? `<button class="act" type="button" data-nearby>${ICON.near}Nearby</button>` : ""}
+        ${b.area ? "" : `<a class="act" href="https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(addr)}" target="_blank" rel="noopener">${ICON.map}Google Maps</a>`}
+        ${b.site ? `<a class="act" href="${esc(b.site.url)}" target="_blank" rel="noopener">${ICON.globe}Website</a>`
+          : `<a class="act" href="https://www.google.com/search?q=${q}" target="_blank" rel="noopener">${ICON.globe}Find website</a>`}
+        ${b.area ? "" : `<button class="act" type="button" data-copy="${esc(addr)}">${ICON.copy}Copy address</button>`}
+        <button class="act${on ? " on" : ""}" type="button" data-save aria-pressed="${on}">${ICON.heart}<span>${on ? "Saved" : "Save"}</span></button>
+      </div>
+      <div class="licbox">
+        <button class="lictoggle" type="button" aria-expanded="false">${ICON.chev}<span>${plural(b.lic.length, "licence")} · ${summary}</span></button>
+        <div class="liclist" hidden></div>
+      </div>`;
+      }
+
+      function card(b, idx, open) {
+        const g = b.groups[0];
+        const badge = b.age <= 30 ? (b.hist.length ? `<span class="pill p-re">Re-licensed</span>` : `<span class="pill p-fresh">New</span>`)
+          : b.worst !== "ok" && b.worst !== "new" ? `<span class="pill ${PILL[b.worst][0]}">${PILL[b.worst][1]}</span>` : "";
+        return `<article class="card${open ? " open" : ""}" style="--gc:${GCOL[g]}" data-i="${idx}">
+      <div class="crow" role="button" tabindex="0" aria-expanded="${!!open}">
+        <div class="thumb${b.site?.pic ? " shot" : ""}" aria-hidden="true">${b.site?.pic ? `<img src="${esc(b.site.pic)}" alt="" loading="lazy">` : esc(initials(b.name))}</div>
+        <div class="cmain">
+          ${badge ? `<div class="mbadge">${badge}</div>` : ""}
+          <h3 class="cname">${hl(b.name)}</h3>
+          <div class="cline cat"><i class="dot"></i><span>${esc(D.groups[g])}</span></div>
+          <div class="cline">${ICON.pin}<span>${hl(addrOf(b))}</span></div>
+          <div class="cline">${ICON.cal}<span>${licLine(b)}</span></div>
+          <div class="cline old">${ICON.clock}<span>Oldest licence: ${fmtDate(b.oldest.issued)}${-daysTo(b.oldest.issued) >= 60 ? ` · ${ago(-daysTo(b.oldest.issued)).replace(" ago", "")}` : ""}${b.oldest.now ? "" : " · earlier licence"}</span></div>
+        </div>
+        <div class="cside">${badge || "<span></span>"}${ICON.chev}${S.near && b.dist != null ? `<span class="dist">${fmtDist(b.dist)}</span>` : "<span></span>"}</div>
+      </div>
+      <div class="cbody"${open ? "" : " hidden"}>${open ? bodyHTML(b) : ""}</div>
+    </article>`;
+      }
+      function toggleCard(el, force) {
+        const body = el.querySelector(".cbody"), open = force ?? body.hidden;
+        if (open && !body.innerHTML.trim()) body.innerHTML = bodyHTML(list[+el.dataset.i]);
+        body.hidden = !open; el.classList.toggle("open", open); el.querySelector(".crow").setAttribute("aria-expanded", open);
+      }
+
+      function pagerHTML() {
+        const N = Math.ceil(list.length / PAGE);
+        if (!list.length) return "";
+        const a = page * PAGE + 1, z = Math.min(list.length, a + PAGE - 1);
+        const want = [...new Set([0, 1, 2, page - 1, page, page + 1, N - 1])].filter((p) => p >= 0 && p < N).sort((x, y) => x - y);
+        let html = "", prev = -1;
+        want.forEach((p) => {
+          if (p - prev > 1) html += `<span class="gap">…</span>`;
+          html += `<button type="button" data-p="${p}"${p === page ? ' aria-current="page"' : ""}>${nf(p + 1)}</button>`; prev = p;
+        });
+        return `<span class="info">Showing ${nf(a)}–${nf(z)} of ${nf(list.length)}</span>
+      <div class="pages"><button type="button" data-p="${page - 1}" aria-label="Previous page"${page ? "" : " disabled"}>${ICON.left}</button>${html}
+      <button type="button" data-p="${page + 1}" aria-label="Next page"${page < N - 1 ? "" : " disabled"}>${ICON.chev}</button></div>`;
+      }
+      function renderPage(p) {
+        page = Math.max(0, Math.min(Math.ceil(list.length / PAGE) - 1, p));
+        $("feed").innerHTML = pageItems().map((b, j) => card(b, page * PAGE + j)).join("");
+        $("pager").innerHTML = pagerHTML();
+        Map.draw();
+      }
+
+      function activeChips() {
+        const chips = [];
+        if (S.q) chips.push(["q", `“${S.q}”`]);
+        S.groups.forEach((g) => chips.push(["group:" + g, D.groups[g]]));
+        if (S.cat) chips.push(["cat", D.cats[+S.cat][0]]);
+        if (S.ward) chips.push(["ward", "Ward " + S.ward + " · " + WARDS[+S.ward]]);
+        if (S.when !== DEF.when) chips.push(["when", "First licensed " + $("when").selectedOptions[0].text.toLowerCase()]);
+        if (S.lstat) chips.push(["lstat", $("lstat").selectedOptions[0].text]);
+        if (S.confirmed) chips.push(["confirmed", "Confirmed licences only"]);
+        if (S.saved) chips.push(["saved", "Saved only"]);
+        if (S.near) chips.push(["near", `Within ${fmtDist(S.radius)}${S.near.label === "your location" ? " of you" : " of " + S.near.label}`]);
+        $("active").innerHTML = chips.map(([k, l]) => `<span class="achip">${esc(l)}<button type="button" data-clear="${k}" aria-label="Remove filter ${esc(l)}">${ICON.x}</button></span>`).join("")
+          + (chips.length ? `<button class="resetall" type="button" data-clear="all">Clear all</button>` : "");
+      }
+
+      function run(scrollTop) {
+        const words = S.q.trim().split(/\s+/).filter((w) => w.length > 1).map((w) => w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"));
+        hlRe = words.length ? new RegExp(`(${words.join("|")})`, "gi") : null;
+        list = filtered();
+        const where = S.ward ? `in Ward ${S.ward}, ${WARDS[+S.ward]}` : S.near ? `near ${S.near.label}` : "in Toronto";
+        $("count").innerHTML = `${nf(list.length)} ${list.length === 1 ? "business" : "businesses"}<span>${esc(where)}</span>`;
+        syncControls(); activeChips();
+        if (Map.clearSel) Map.clearSel();
+        if (!list.length) {
+          $("feed").innerHTML = `<div class="empty"><h3>No businesses match</h3><p>${S.when !== "0" ? "The time window may be too short. " : ""}Try a different search, or remove a filter above.</p>
+        ${S.when !== "0" ? `<button class="act" type="button" data-anytime>Search any time</button>` : ""}</div>`;
+          $("pager").innerHTML = ""; page = 0; Map.draw();
+        } else renderPage(0);
+        if (scrollTop && window.scrollY > $("layout").offsetTop) window.scrollTo({ top: $("layout").offsetTop - 10 });
+      }
+
+      // ---- events ----
+      let t;
+      $("q").addEventListener("input", () => { clearTimeout(t); t = setTimeout(() => { S.q = $("q").value; run(false); }, 160); });
+      $("searchForm").addEventListener("submit", (e) => {
+        e.preventDefault(); clearTimeout(t); S.q = $("q").value; run(false);
+        window.scrollTo({ top: $("layout").offsetTop - 10, behavior: "smooth" });
+      });
+      document.addEventListener("keydown", (e) => {
+        if (e.key === "/" && !["INPUT", "SELECT"].includes(document.activeElement.tagName)) { e.preventDefault(); $("q").focus(); }
+        if (e.key === "Escape") { if (document.activeElement === $("q") && S.q) { S.q = ""; run(false); } closeSheet(); }
+      });
+      [["cat", "cat"], ["ward", "ward"], ["when", "when"], ["lstat", "lstat"], ["sort", "sort"]].forEach(([id, k]) =>
+        $(id).addEventListener("change", () => { S[k] = $(id).value; run(true); }));
+      $("confirmedOnly").addEventListener("change", () => { S.confirmed = $("confirmedOnly").checked; run(true); });
+      // light / dark toggle (remembered on this device; follows the system setting until chosen)
+      const SUN = '<svg class="i" viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M4.9 4.9l1.4 1.4M17.7 17.7l1.4 1.4M2 12h2M20 12h2M4.9 19.1l1.4-1.4M17.7 6.3l1.4-1.4"/></svg>';
+      const MOON = '<svg class="i" viewBox="0 0 24 24"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>';
+      function applyTheme(t) {
+        if (t) document.documentElement.dataset.theme = t;
+        const dark = t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches;
+        $("themeBtn").innerHTML = (dark ? SUN : MOON) + `<span class="lbl">${dark ? "Light" : "Dark"}</span>`;
+        $("themeBtn").setAttribute("aria-label", dark ? "Switch to light mode" : "Switch to dark mode");
+      }
+      let savedTheme = null; try { savedTheme = localStorage.getItem("theme"); } catch (e) { }
+      applyTheme(savedTheme);
+      $("themeBtn").onclick = () => {
+        const t = (document.documentElement.dataset.theme || (matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light")) === "dark" ? "light" : "dark";
+        try { localStorage.setItem("theme", t); } catch (e) { }
+        applyTheme(t); Map.draw();
+      };
+      $("savedBtn").onclick = () => { S.saved = !S.saved; run(true); };
+      $("resetAll").onclick = () => { clearNear(); Object.assign(S, DEF, { groups: [] }); run(true); };
+      $("active").onclick = (e) => {
+        const b = e.target.closest("[data-clear]"); if (!b) return;
+        const k = b.dataset.clear;
+        if (k === "all") { clearNear(); Object.assign(S, DEF, { groups: [] }); }
+        else if (k.startsWith("group:")) S.groups = S.groups.filter((g) => g !== +k.slice(6));
+        else if (k === "phone" || k === "saved") S[k] = false;
+        else if (k === "near") clearNear(); else S[k] = DEF[k];
+        run(false);
+      };
+      $("pager").onclick = (e) => {
+        const b = e.target.closest("[data-p]"); if (!b || b.disabled) return;
+        renderPage(+b.dataset.p);
+        const top = $("results").getBoundingClientRect().top + window.scrollY - 10;
+        if (window.scrollY > top) window.scrollTo({ top });
+      };
+      $("collapse").onclick = () => {
+        const c = $("layout").classList.toggle("collapsed");
+        $("collapse").setAttribute("aria-label", c ? "Expand filters" : "Collapse filters");
+      };
+      // filter sheet (phones)
+      let scrim = null;
+      function openSheet() { $("filters").classList.add("open"); scrim = document.createElement("div"); scrim.className = "scrim"; scrim.onclick = closeSheet; document.body.appendChild(scrim); }
+      function closeSheet() { $("filters").classList.remove("open"); if (scrim) { scrim.remove(); scrim = null; } }
+      $("openFilters").onclick = openSheet; $("closeFilters").onclick = closeSheet; $("applyFilters").onclick = closeSheet;
+
+      const toast = (msg) => { const el = $("toast"); el.textContent = msg; el.classList.add("show"); clearTimeout(el._t); el._t = setTimeout(() => el.classList.remove("show"), 1600); };
+      function onCardClick(e) {
+        if (e.target.closest("[data-anytime]")) { S.when = "0"; run(false); return; }
+        const cardEl = e.target.closest(".card"); if (!cardEl) return;
+        const b = list[+cardEl.dataset.i];
+        if (e.target.closest("[data-nearby]")) { setNear(b.lat, b.lon, b.name); return; }
+        const cp = e.target.closest("[data-copy]");
+        if (cp) {
+          const txt = cp.dataset.copy;
+          const ok = () => toast("Copied: " + txt);
+          if (navigator.clipboard) navigator.clipboard.writeText(txt).then(ok).catch(() => toast(txt));
+          else toast(txt);
+          return;
+        }
+        const sv = e.target.closest("[data-save]");
+        if (sv) {
+          saved.has(b.key) ? saved.delete(b.key) : saved.add(b.key); persist();
+          const on = saved.has(b.key);
+          sv.classList.toggle("on", on); sv.setAttribute("aria-pressed", on); sv.lastElementChild.textContent = on ? "Saved" : "Save";
+          toast(on ? "Saved " + b.name : "Removed from saved");
+          if (S.saved && !on) run(false);
+          return;
+        }
+        const tg = e.target.closest(".lictoggle");
+        if (tg) {
+          const box = tg.nextElementSibling, open = tg.getAttribute("aria-expanded") !== "true";
+          if (open && !box.innerHTML) box.innerHTML = b.lic.slice().sort((x, y) => y.issued.localeCompare(x.issued)).map(licHTML).join("") + histHTML(b);
+          box.hidden = !open; tg.setAttribute("aria-expanded", open);
+          return;
+        }
+        if (e.target.closest(".crow") && cardEl.parentElement === $("feed")) {
+          toggleCard(cardEl);
+          Map.setSel(cardEl.classList.contains("open") ? b : null);
+        }
+      }
+      $("feed").addEventListener("click", onCardClick);
+      $("mapsel").addEventListener("click", onCardClick);
+      $("feed").addEventListener("keydown", (e) => {
+        if ((e.key === "Enter" || e.key === " ") && e.target.classList.contains("crow")) { e.preventDefault(); e.target.click(); }
+      });
+      // hovering a card highlights its pin
+      $("feed").addEventListener("pointerover", (e) => {
+        const c = e.target.closest(".card"); Map.setHover(c ? list[+c.dataset.i] : null);
+      });
+      $("feed").addEventListener("pointerleave", () => Map.setHover(null));
+      // a pin picked on the map: open its card in the list when the list is beside the map, else show it under the map
+      function showOnList(b) {
+        const i = list.indexOf(b);
+        if (view === "list" && $("feed").offsetParent) {
+          if (Math.floor(i / PAGE) !== page) renderPage(Math.floor(i / PAGE));
+          const el = $("feed").querySelector(`[data-i="${i}"]`);
+          if (el) { toggleCard(el, true); el.scrollIntoView({ block: "nearest", behavior: "smooth" }); }
+          $("mapsel").innerHTML = "";
+        } else $("mapsel").innerHTML = card(b, i, true);
+      }
+
+      // ---- nearby ----
+      function setNear(lat, lon, label) {
+        S.near = { lat, lon, label }; S.sort = "dist";
+        $("nearMsg").className = "nmsg"; $("nearMsg").textContent = `Showing businesses within ${fmtDist(S.radius)} of ${label}.`;
+        closeSheet(); run(true); Map.focus(lat, lon, S.radius);
+      }
+      function clearNear() {
+        S.near = null; if (S.sort === "dist") S.sort = "new";
+        $("nearMsg").className = "nmsg"; $("nearMsg").textContent = "Or click an empty spot on the map, or press “Nearby” on any business.";
+      }
+      $("nearForm").addEventListener("submit", (e) => {
+        e.preventDefault();
+        const raw = $("nearIn").value.toUpperCase().replace(/[^A-Z0-9]/g, "");
+        const full = raw.length === 6 ? raw.slice(0, 3) + " " + raw.slice(3) : null;
+        const fsa = raw.slice(0, 3);
+        const hit = full && D.postal[full] ? [full, D.postal[full]] : D.postal[fsa] ? [fsa + " area", D.postal[fsa]] : null;
+        if (!hit) { $("nearMsg").className = "nmsg err"; $("nearMsg").textContent = "That postal code isn't in Toronto's business data. Check it, or click the map instead."; return; }
+        setNear(hit[1][0], hit[1][1], hit[0]);
+      });
+      // "Near me": the browser's location (asks the viewer's permission; stays on this device)
+      function nearMe() {
+        const btn = $("nearMe"), msg = $("nearMsg");
+        const fail = (t) => { btn.disabled = false; msg.className = "nmsg err"; msg.textContent = t; toast(t); };
+        if (!navigator.geolocation) return fail("Your browser can't share your location. Enter a postal code instead.");
+        btn.disabled = true; msg.className = "nmsg"; msg.textContent = "Finding your location…";
+        navigator.geolocation.getCurrentPosition((p) => {
+          btn.disabled = false;
+          const { latitude: lat, longitude: lon } = p.coords;
+          if (lat < 43.5 || lat > 43.9 || lon < -79.7 || lon > -79.05)
+            return fail("You seem to be outside Toronto. Enter a postal code or click the map instead.");
+          setNear(lat, lon, "your location");
+        }, (err) => fail(err.code === 1 ? "Location access was blocked. Allow it in your browser, or enter a postal code."
+          : "Couldn't get your location. Try again, or enter a postal code."),
+          { enableHighAccuracy: true, timeout: 10000, maximumAge: 60000 });
+      }
+      $("nearMe").addEventListener("click", nearMe);
+      $("zme").addEventListener("click", nearMe);
+      $("radius").addEventListener("click", (e) => {
+        const b = e.target.closest("[data-r]"); if (!b) return;
+        S.radius = +b.dataset.r;
+        if (S.near) setNear(S.near.lat, S.near.lon, S.near.label); else syncControls();
+      });
+      document.querySelectorAll("[data-view]").forEach((b) => b.addEventListener("click", () => {
+        view = b.dataset.view; $("split").classList.toggle("mapmode", view === "map"); syncControls();
+        $("mapsel").innerHTML = "";
+        Map.resize(); if (S.near) Map.focus(S.near.lat, S.near.lon, S.radius);
+      }));
+
+      // ---- map (canvas: street tiles, ward outlines, a dot per match, pins for the current page) ----
+      const Map = (() => {
+        const cv = $("map"), wrap = $("mapwrap"), ctx = cv.getContext("2d"), tip = $("maptip");
+        const css = (v) => getComputedStyle(document.documentElement).getPropertyValue(v).trim();
+        let W = 0, H = 0, dpr = 1, cx = -79.385, cy = 43.722, sc = 0, fitSc = 1, sel = null, hover = null, pinned = [];
+        // Web Mercator, so the street tiles line up; near Toronto 1° of latitude is still ~sc pixels
+        const R2D = 180 / Math.PI;
+        const mY = (lat) => Math.log(Math.tan(Math.PI / 4 + lat / (2 * R2D))) * R2D;
+        const iY = (m) => (2 * Math.atan(Math.exp(m / R2D)) - Math.PI / 2) * R2D;
+        const px = (lon, lat) => [(lon - cx) * KX * sc + W / 2, (mY(cy) - mY(lat)) * KX * sc + H / 2];
+        const ll = (x, y) => [cx + (x - W / 2) / (KX * sc), iY(mY(cy) - (y - H / 2) / (KX * sc))];
+        // street basemap: Esri light/dark gray canvas (base + street/place labels). No key needed, and
+        // unlike OpenStreetMap's own servers it also works when the page is opened as a local file.
+        const tiles = new window.Map(); let tileRaf = 0;
+        const isDark = () => { const t = document.documentElement.dataset.theme; return t ? t === "dark" : matchMedia("(prefers-color-scheme: dark)").matches; };
+        const ESRI = "https://server.arcgisonline.com/ArcGIS/rest/services/Canvas/";
+        function drawTiles() {
+          const z = Math.max(0, Math.min(16, Math.round(Math.log2(KX * sc * 360 / 256)))), n = 2 ** z;   // these layers stop at zoom 16
+          const shade = isDark() ? "Dark" : "Light";
+          const [lo0, la0] = ll(0, 0), [lo1, la1] = ll(W, H);
+          const tx = (lo) => (lo + 180) / 360 * n, ty = (la) => (1 - mY(la) / 180) / 2 * n;
+          const lon = (x) => x / n * 360 - 180, lat = (y) => iY((1 - 2 * y / n) * 180);
+          ["Base", "Reference"].forEach((layer) => {
+            for (let x = Math.floor(tx(lo0)); x <= Math.floor(tx(lo1)); x++)
+              for (let y = Math.floor(ty(la0)); y <= Math.floor(ty(la1)); y++) {
+                if (y < 0 || y >= n) continue;
+                const key = `World_${shade}_Gray_${layer}/MapServer/tile/${z}/${y}/${x}`;
+                let img = tiles.get(key);
+                if (!img) {
+                  if (tiles.size > 600) tiles.clear();
+                  img = new Image();
+                  img.onload = () => { if (!tileRaf) tileRaf = requestAnimationFrame(() => { tileRaf = 0; draw(); }); };
+                  img.src = ESRI + key;
+                  tiles.set(key, img);
+                }
+                if (!img.complete || !img.naturalWidth) continue;
+                const [x0, y0] = px(lon(x), lat(y)), [x1, y1] = px(lon(x + 1), lat(y + 1));
+                ctx.drawImage(img, x0, y0, x1 - x0 + 0.5, y1 - y0 + 0.5);
+              }
+          });
+        }
+        function resize() {
+          const r = wrap.getBoundingClientRect(); if (!r.width) return;
+          dpr = window.devicePixelRatio || 1; W = r.width; H = r.height;
+          cv.width = Math.round(W * dpr); cv.height = Math.round(H * dpr);
+          fitSc = Math.min(W / (0.56 * KX), H / 0.30) * 0.95;
+          if (!sc) sc = fitSc;
+          draw();
+        }
+        const PIN_H = 30, PIN_R = 9;
+        function pin(x, y, col, big) {
+          const k = big ? 1.25 : 1, h = PIN_H * k, r = PIN_R * k, c = y - h + r;
+          ctx.save(); ctx.shadowColor = "rgba(0,0,0,.3)"; ctx.shadowBlur = 4; ctx.shadowOffsetY = 1;
+          ctx.beginPath(); ctx.arc(x, c, r, Math.PI * 0.8, Math.PI * 0.2); ctx.lineTo(x, y); ctx.closePath();
+          ctx.fillStyle = col; ctx.fill(); ctx.restore();
+          ctx.lineWidth = 1.5; ctx.strokeStyle = "rgba(255,255,255,.9)"; ctx.stroke();
+          ctx.beginPath(); ctx.arc(x, c, r * 0.4, 0, 7); ctx.fillStyle = "#fff"; ctx.fill();
+        }
+        function draw() {
+          if (!W || !wrap.offsetParent) return;
+          ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+          ctx.fillStyle = css("--map-bg"); ctx.fillRect(0, 0, W, H);
+          drawTiles();
+          ctx.lineWidth = 1.2; ctx.strokeStyle = css("--ward-line"); ctx.setLineDash([5, 4]); ctx.globalAlpha = .7;
+          D.wards.forEach((w) => w.rings.forEach((ring) => {      // ward outlines over the streets
+            ctx.beginPath(); ring.forEach(([lo, la], i) => { const [x, y] = px(lo, la); i ? ctx.lineTo(x, y) : ctx.moveTo(x, y); });
+            ctx.closePath(); ctx.stroke();
+          }));
+          ctx.setLineDash([]); ctx.globalAlpha = 1;
+          if (S.near) {
+            const [x, y] = px(S.near.lon, S.near.lat), rr = S.radius / 111320 * sc;
+            ctx.beginPath(); ctx.arc(x, y, rr, 0, 7); ctx.fillStyle = css("--info-soft"); ctx.globalAlpha = .45; ctx.fill(); ctx.globalAlpha = 1;
+            ctx.strokeStyle = css("--info"); ctx.lineWidth = 1.5; ctx.stroke();
+          }
+          const cols = D.groups.map((_, g) => css("--g" + g)), surf = css("--surface");
+          // pins: the current page beside the list; in map-only view, everything on screen once zoomed in
+          const onScreen = (b) => { const [x, y] = px(b.lon, b.lat); return x > -20 && y > -10 && x < W + 20 && y < H + 40; };
+          if (view === "list") pinned = pageItems().filter((b) => b.lat != null);
+          else if (sc >= fitSc * 7) { pinned = list.filter((b) => b.lat != null && onScreen(b)); if (pinned.length > 300) pinned = []; }
+          else pinned = [];
+          if (sel && sel.lat != null && !pinned.includes(sel)) pinned = pinned.concat(sel);
+          const pinSet = new Set(pinned);
+          const r0 = Math.max(1.6, Math.min(4.5, 1.6 * Math.sqrt(sc / fitSc)));
+          ctx.globalAlpha = view === "list" && pinned.length ? .55 : 1;
+          for (let i = list.length - 1; i >= 0; i--) {     // newest drawn last, so on top
+            const b = list[i]; if (b.lat == null || pinSet.has(b)) continue;
+            const [x, y] = px(b.lon, b.lat); if (x < -5 || y < -5 || x > W + 5 || y > H + 5) continue;
+            ctx.beginPath(); ctx.arc(x, y, r0, 0, 7); ctx.fillStyle = cols[b.groups[0]]; ctx.fill();
+            if (r0 >= 3) { ctx.lineWidth = 1; ctx.strokeStyle = surf; ctx.stroke(); }
+          }
+          ctx.globalAlpha = 1;
+          if (hover && hover.lat != null && !pinSet.has(hover)) {
+            const [x, y] = px(hover.lon, hover.lat); ctx.beginPath(); ctx.arc(x, y, r0 + 4, 0, 7); ctx.lineWidth = 2.5; ctx.strokeStyle = css("--ink"); ctx.stroke();
+          }
+          pinned.slice().sort((a, b) => (a === sel || a === hover) - (b === sel || b === hover) || b.lat - a.lat)
+            .forEach((b) => { const [x, y] = px(b.lon, b.lat); pin(x, y, cols[b.groups[0]], b === sel || b === hover); });
+          if (S.near) {
+            const [x, y] = px(S.near.lon, S.near.lat); ctx.beginPath(); ctx.arc(x, y, 7, 0, 7); ctx.fillStyle = css("--info"); ctx.fill();
+            ctx.lineWidth = 3; ctx.strokeStyle = "#fff"; ctx.stroke();
+          }
+          const placed = list.filter((b) => b.lat != null).length;
+          $("mapmeta").textContent = `${nf(placed)} of ${nf(list.length)} matching businesses on the map` +
+            (placed < list.length ? ` (${nf(list.length - placed)} have an address outside Toronto or couldn't be placed)` : "") +
+            ". Drag to move, scroll to zoom. Click a pin or dot for details, or an empty spot to see what's nearby.";
+        }
+        function nearest(x, y, maxPx) {
+          for (let i = pinned.length - 1; i >= 0; i--) {       // pins first: hit test on the pin head
+            const b = pinned[i], [bx, by] = px(b.lon, b.lat);
+            if ((bx - x) ** 2 + (by - PIN_H + PIN_R - y) ** 2 <= (PIN_R + 4) ** 2) return b;
+          }
+          let best = null, bd = maxPx * maxPx;
+          for (const b of list) {
+            if (b.lat == null) continue;
+            const [bx, by] = px(b.lon, b.lat), d = (bx - x) ** 2 + (by - y) ** 2;
+            if (d < bd) { bd = d; best = b; }
+          }
+          return best;
+        }
+        function zoomAt(f, x = W / 2, y = H / 2) {
+          const [lo, la] = ll(x, y);
+          sc = Math.max(fitSc * 0.8, Math.min(fitSc * 60, sc * f));
+          const [lo2, la2] = ll(x, y); cx += lo - lo2; cy = iY(mY(cy) + mY(la) - mY(la2)); draw();
+        }
+        function focus(lat, lon, radius) {
+          resize(); if (!W) return; cx = lon; cy = lat;
+          sc = Math.max(fitSc, Math.min(fitSc * 60, (Math.min(W, H) * 0.42) / (radius / 111320)));
+          draw();
+        }
+        // pointers: drag to pan, pinch to zoom, tap a pin/dot to select, tap empty map to search nearby
+        const pts = new window.Map(); let moved = false, lastDist = 0, down = null;
+        const pos = (e) => { const r = cv.getBoundingClientRect(); return [e.clientX - r.left, e.clientY - r.top]; };
+        cv.addEventListener("pointerdown", (e) => {
+          cv.setPointerCapture(e.pointerId); pts.set(e.pointerId, pos(e)); moved = false; down = pos(e);
+          cv.classList.add("dragging"); tip.hidden = true;
+        });
+        cv.addEventListener("pointermove", (e) => {
+          const p = pos(e);
+          if (!pts.has(e.pointerId)) {                       // hover tooltip
+            const b = nearest(p[0], p[1], 9);
+            if (b !== hover) { hover = b; draw(); }
+            tip.hidden = !b; if (b) { tip.textContent = b.name; tip.style.left = p[0] + "px"; tip.style.top = p[1] + "px"; }
+            cv.style.cursor = b ? "pointer" : "";
+            return;
+          }
+          const prev = pts.get(e.pointerId); pts.set(e.pointerId, p);
+          if (pts.size === 2) {
+            const [a, c] = [...pts.values()], d = Math.hypot(a[0] - c[0], a[1] - c[1]);
+            if (lastDist) zoomAt(d / lastDist, (a[0] + c[0]) / 2, (a[1] + c[1]) / 2);
+            lastDist = d; moved = true; return;
+          }
+          if (Math.abs(p[0] - down[0]) + Math.abs(p[1] - down[1]) > 4) moved = true;
+          cx -= (p[0] - prev[0]) / (KX * sc); cy = iY(mY(cy) + (p[1] - prev[1]) / (KX * sc)); draw();
+        });
+        const up = (e) => {
+          pts.delete(e.pointerId); if (pts.size < 2) lastDist = 0; cv.classList.remove("dragging");
+          if (!moved && pts.size === 0 && e.type === "pointerup") {
+            const p = pos(e), b = nearest(p[0], p[1], 12);
+            if (b) { sel = b; draw(); showOnList(b); }
+            else { const [lo, la] = ll(p[0], p[1]); setNear(la, lo, "the spot you picked"); }
+          }
+        };
+        cv.addEventListener("pointerup", up); cv.addEventListener("pointercancel", up);
+        cv.addEventListener("pointerleave", () => { if (hover) { hover = null; draw(); } tip.hidden = true; });
+        cv.addEventListener("wheel", (e) => { e.preventDefault(); const p = pos(e); zoomAt(Math.exp(-e.deltaY * 0.0015), p[0], p[1]); }, { passive: false });
+        $("zin").onclick = () => zoomAt(1.6); $("zout").onclick = () => zoomAt(1 / 1.6);
+        $("zfit").onclick = () => { cx = -79.385; cy = 43.722; sc = fitSc; draw(); };
+        if ("ResizeObserver" in window) new ResizeObserver(() => resize()).observe(wrap);
+        else window.addEventListener("resize", resize);
+        const mq = window.matchMedia("(prefers-color-scheme: dark)");
+        if (mq.addEventListener) mq.addEventListener("change", () => { applyTheme(document.documentElement.dataset.theme); draw(); });
+        $("legend").innerHTML = `<b>Business category (map pins)</b>` + D.groups.map((g, k) => `<span><i style="background:var(--g${k})"></i>${esc(g)}</span>`).join("");
+        return {
+          resize, draw, focus,
+          setSel: (b) => { sel = b; draw(); },
+          setHover: (b) => { if (b !== hover) { hover = b; draw(); } },
+          clearSel: () => { sel = null; $("mapsel").innerHTML = ""; }
+        };
+      })();
+
+      updSaved(); run(false); Map.resize();
+    })();
+  }).catch((e) => {
+    console.error(e);
+    document.getElementById("count").textContent = "Sorry, the business list could not be loaded. Please refresh the page.";
+  });
+</script>
+</body>
+</html>
