@@ -2114,7 +2114,7 @@
   // index.html is opened straight from disk (file://), where fetch() is blocked.
   new Promise((ok, no) => {
     const tag = document.createElement("script");
-    tag.src = "directory_data.js?v=2026-11-27";
+    tag.src = "directory_data.js?v=2026-11-28";
     tag.onload = () => (window.LTO_DATA ? ok(window.LTO_DATA) : no(new Error("no data")));
     tag.onerror = () => no(new Error("data file missing"));
     document.head.appendChild(tag);
